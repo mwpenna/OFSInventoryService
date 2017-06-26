@@ -19,6 +19,16 @@ Feature: Template is created when template endpoint is called
     Then the response should have a status of 201
     And I should the template was created
 
+  Scenario: A request to create a template is received by a ADMIN
+    Given User authenticate service returns an exception
+    When A request to create a template is received
+    Then the response should have a status of 403
+
+  Scenario: A request to create a template is received by a ADMIN
+    Given A ADMIN user does not exists for a company
+    When A request to create a template is received
+    Then the response should have a status of 403
+
   Scenario: A request to create a template is received by a SYSTEM_ADMIN
     Given A ACCOUNT_MANAGER user exists for a company
     When A request to create a template is received
