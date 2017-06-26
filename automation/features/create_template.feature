@@ -6,3 +6,80 @@ Feature: Template is created when template endpoint is called
     When A request to create a template is received
     Then the response should have a status of 201
     And I should see the location header populated
+
+  Scenario: A request to create a template is received by a ADMIN
+    Given A ADMIN user exists for a company
+    When A request to create a template is received
+    Then the response should have a status of 201
+    And I should see the location header populated
+
+  Scenario: A request to create a template is received by a ADMIN
+    Given A ADMIN user exists for a company
+    When A request to create a template is received
+    Then the response should have a status of 201
+    And I should the template was created
+
+  Scenario: A request to create a template is received by a SYSTEM_ADMIN
+    Given A ACCOUNT_MANAGER user exists for a company
+    When A request to create a template is received
+    Then the response should have a status of 400
+
+  Scenario: A request to create a template is received by a SYSTEM_ADMIN
+    Given A WAREHOUSE user exists for a company
+    When A request to create a template is received
+    Then the response should have a status of 400
+
+  Scenario: A request to create a template is received by a SYSTEM_ADMIN
+    Given A CUSTOMER user exists for a company
+    When A request to create a template is received
+    Then the response should have a status of 400
+
+  Scenario: A request to creaate a template is recived with missing required field name
+    Given A ADMIN user exists for a company
+    When A request to create a template is received with missing name
+    Then the response should have a status of 400
+
+  Scenario: A request to creaate a template is recived with missing required field companyHref
+    Given A ADMIN user exists for a company
+    When A request to create a template is received with missing companyHref
+    Then the response should have a status of 400
+
+  Scenario: A request to creaate a template is recived with missing required field props
+    Given A ADMIN user exists for a company
+    When A request to create a template is received with missing props
+    Then the response should have a status of 400
+
+  Scenario: A request to creaate a template is recived with missing required field prop.name
+    Given A ADMIN user exists for a company
+    When A request to create a template is received with missing prop.name
+    Then the response should have a status of 400
+
+  Scenario: A request to creaate a template is recived with missing required field prop.type
+    Given A ADMIN user exists for a company
+    When A request to create a template is received with missing prop.type
+    Then the response should have a status of 400
+
+  Scenario: A request to creaate a template is recived with missing required field prop.required
+    Given A ADMIN user exists for a company
+    When A request to create a template is received with missing prop.required
+    Then the response should have a status of 400
+
+  Scenario: A request to create a template is received with href field
+    Given A ADMIN user exists for a company
+    When A request to create a template is received with href
+    Then the response should have a status of 400
+
+  Scenario: A request to create a template is received with createdOn field
+    Given A ADMIN user exists for a company
+    When A request to create a template is received with createdOn
+    Then the response should have a status of 400
+
+  Scenario: A request to create a template is received with id field
+    Given A ADMIN user exists for a company
+    When A request to create a template is received with id
+    Then the response should have a status of 400
+
+  Scenario: A request to create a template is received with duplicate template name
+    Given A ADMIN user and template exists for a company
+    When A request to create a duplicate template name is received
+    Then the response should have a status of 400
