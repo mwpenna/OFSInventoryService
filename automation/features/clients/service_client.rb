@@ -7,7 +7,7 @@ class ServiceClient
     end
 
     def post_to_url(path, body)
-      return HTTParty.post((get_base_uri + path).to_str, :body=> body, :headers => { 'Content-Type' => 'application/json' })
+      return HTTParty.post(path, :body=> body, :headers => { 'Content-Type' => 'application/json' })
     end
 
     def post_to_url_with_auth(path, body, authHeader)
