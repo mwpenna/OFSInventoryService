@@ -1,7 +1,7 @@
 Given(/^A SYSTEM_ADMIN user exists for a company$/) do
   jwtsubject = FactoryGirl.build(:jwtsubject, role:'SYSTEM_ADMIN')
   request = '{"status": 200, "message":'+ jwtsubject.to_json+'}'
-  @service_client.post_to_url('http://localhost:4567/users/authenticate/status', request)
+  @service_client.post_to_url(@service_client.get_mock_base_uri + '/users/authenticate/status', request)
 end
 
 When(/^A request to create a template is received$/) do

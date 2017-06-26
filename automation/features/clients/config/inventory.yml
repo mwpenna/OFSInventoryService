@@ -1,2 +1,3 @@
 local:
     base_uri: http://localhost:8083
+    mock_base_uri: http://localhost:4567

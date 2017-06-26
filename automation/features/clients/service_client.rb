@@ -6,6 +6,10 @@ class ServiceClient
       return YAML.load(File.read("#{$PROJECT_ROOT}/features/clients/config/inventory.yml"))[ENV['ENVIRONMENT']]["base_uri"]
     end
 
+    def get_mock_base_uri
+      return YAML.load(File.read("#{$PROJECT_ROOT}/features/clients/config/inventory.yml"))[ENV['ENVIRONMENT']]["mock_base_uri"]
+    end
+
     def post_to_url(path, body)
       return HTTParty.post(path, :body=> body, :headers => { 'Content-Type' => 'application/json' })
     end
