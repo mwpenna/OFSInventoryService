@@ -4,6 +4,7 @@ import com.ofs.model.Template;
 import com.ofs.server.OFSController;
 import com.ofs.server.OFSServerId;
 import com.ofs.server.form.OFSServerForm;
+import com.ofs.server.form.ValidationSchema;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,9 @@ import java.net.URI;
 public class TemplateController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ValidationSchema(value = "/template-create.json")
     public ResponseEntity create(@OFSServerId URI id, OFSServerForm<Template> form) throws Exception{
+        form.create(id);
         return ResponseEntity.created(id).build();
     }
 }

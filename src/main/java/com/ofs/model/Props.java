@@ -7,7 +7,8 @@ public class Props {
 
     public enum Type {
         NUMBER,
-        TEXT
+        STRING,
+        BOOLEAN
     }
 
     private String name;
