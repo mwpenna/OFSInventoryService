@@ -16,6 +16,10 @@
     "name": {
       "type": "string"
     },
+    "companyHref" : {
+      "type": "string",
+      "pattern": "^(http|https):\/\/.*$"
+    },
     "props": {
       "type": "array",
       "items": {
@@ -43,7 +47,7 @@
       }
     }
   },
-  "required":["name", "props"],
+  "required":["name", "companyHref", "props"],
   "additionalProperties": true
 }
 

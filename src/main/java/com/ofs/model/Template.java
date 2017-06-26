@@ -30,9 +30,15 @@ public class Template implements OFSEntity{
     private ZonedDateTime createdOn;
     private String name;
     private List<Props> props;
+    private URI companyHref;
 
     @JsonIgnore
     public String getIdFromHref() {
         return StringUtils.getIdFromURI(getHref());
+    }
+
+    @JsonIgnore
+    public String getCompanyIdFromHref() {
+        return StringUtils.getIdFromURI(getCompanyHref());
     }
 }
