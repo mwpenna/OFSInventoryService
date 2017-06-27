@@ -33,14 +33,14 @@ public class TemplateRepository extends BaseCouchbaseRepository<Template>{
         log.info("Template with id: {} has been added", template.getId());
     }
 
-    public Optional<Template> getTemplateByName(String name, String companyHref) throws Exception {
+    public Optional<Template> getTemplateByName(String name, String companyId) throws Exception {
         if(name == null) {
             return Optional.empty();
         }
 
         try {
             ParameterizedN1qlQuery query = ParameterizedN1qlQuery.parameterized(
-                    generateGetByNameQuery(), generateGetByNameParameters(name, companyHref));
+                    generateGetByNameQuery(), generateGetByNameParameters(name, companyId));
             return queryForObjectByParameters(query, connectionManager.getBucket("template"), Template.class);
         }
         catch (NoSuchElementException e) {
@@ -58,7 +58,7 @@ public class TemplateRepository extends BaseCouchbaseRepository<Template>{
                 + "` where name = $name and companyHref = $companyHref";
     }
 
-    private JsonObject generateGetByNameParameters(String name, String companyHref) {
-        return JsonObject.create().put("$name", name).put("$companyHref", companyHref);
+    private JsonObject generateGetByNameParameters(String name, String companyId) {
+        return JsonObject.create().put("$name", name).put("$companyId", companyId);
     }
 }

@@ -16,12 +16,7 @@ public class ValidateCreatePermissions implements TemplateCreateValidation {
     public void validate(Template template, OFSErrors errors) throws Exception {
         Subject subject = SecurityContext.getSubject();
 
-        if(subject.getRole().equals("ADMIN")) {
-            if(!StringUtils.getIdFromURI(subject.getCompanyHref()).equals(template.getCompanyIdFromHref())) {
-                throw new UnauthorizedException("OAuth", "OFSServer");
-            }
-        }
-        else if(!subject.getRole().equals("SYSTEM_ADMIN")) {
+        if(!subject.getRole().equalsIgnoreCase("SYSTEM_ADMIN") && !subject.getRole().equalsIgnoreCase("ADMIN")) {
             throw new UnauthorizedException("OAuth", "OFSServer");
         }
     }

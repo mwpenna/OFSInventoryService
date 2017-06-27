@@ -16,9 +16,8 @@
     "name": {
       "type": "string"
     },
-    "companyHref" : {
-      "type": "string",
-      "pattern": "^(http|https):\/\/.*$"
+    "companyId" : {
+      "type": "string"
     },
     "props": {
       "type": "array",
