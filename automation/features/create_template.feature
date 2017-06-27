@@ -76,17 +76,17 @@ Feature: Template is created when template endpoint is called
 
   Scenario: A request to create a template is received with href field
     Given A ADMIN user exists for a company
-    When A request to create a template is received with href
+    When A request to create a template is received with field not allowed href
     Then the response should have a status of 400
 
   Scenario: A request to create a template is received with createdOn field
     Given A ADMIN user exists for a company
-    When A request to create a template is received with createdOn
+    When A request to create a template is received with field not allowed createdOn
     Then the response should have a status of 400
 
   Scenario: A request to create a template is received with id field
     Given A ADMIN user exists for a company
-    When A request to create a template is received with id
+    When A request to create a template is received with field not allowed id
     Then the response should have a status of 400
 
   Scenario: A request to create a template is received with duplicate template name
