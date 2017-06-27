@@ -66,19 +66,19 @@ Feature: Template is created when template endpoint is called
     Given A ADMIN user exists for a company
     When A request to create a template with missing prop field name is received
     Then the response should have a status of 400
-    And I should see an error message with prop name missing
+    And I should see an error message indicating prop name missing
 
   Scenario: A request to creaate a template is recived with missing required field prop.type
     Given A ADMIN user exists for a company
     When A request to create a template with missing prop field type is received
     Then the response should have a status of 400
-    And I should see an error message with prop type missing
+    And I should see an error message indicating prop type missing
 
   Scenario: A request to creaate a template is recived with missing required field prop.required
     Given A ADMIN user exists for a company
     When A request to create a template with missing prop field required is received
     Then the response should have a status of 400
-    And I should see an error message with prop required missing
+    And I should see an error message indicating prop required missing
 
   Scenario: A request to create a template is received with href field
     Given A ADMIN user exists for a company

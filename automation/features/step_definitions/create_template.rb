@@ -59,3 +59,15 @@ end
 And(/^I should see the location header populated$/) do
   expect(@result.headers['location']).to_not be_nil
 end
+
+And(/^I should see an error message with (.*?) not allowed/) do |property|
+  expect(@result["errors"][0]).to eql Errors.field_not_acceptable(property)
+end
+
+And(/^I should see an error message with (.*?) missing$/) do |property|
+  expect(@result["errors"][0]).to eql Errors.required_field_missing(property)
+end
+
+And(/^I should see an error message indicating prop (.*?) missing$/) do |property|
+  expect(@result["errors"][0]).to eql Errors.props_required_field_missing(property)
+end
