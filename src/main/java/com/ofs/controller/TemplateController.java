@@ -8,6 +8,9 @@ import com.ofs.server.form.OFSServerForm;
 import com.ofs.server.form.ValidationSchema;
 import com.ofs.server.model.OFSErrors;
 import com.ofs.server.security.Authenticate;
+import com.ofs.server.security.SecurityContext;
+import com.ofs.server.security.Subject;
+import com.ofs.utils.StringUtils;
 import com.ofs.validators.template.TemplateCreateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -34,11 +37,20 @@ public class TemplateController {
     @CrossOrigin(origins = "*")
     public ResponseEntity create(@OFSServerId URI id, OFSServerForm<Template> form) throws Exception{
         Template template = form.create(id);
+        defaultValues(template);
 
         OFSErrors errors = new OFSErrors();
         templateCreateValidator.validate(template, errors);
 
         templateRepository.addTemplate(template);
         return ResponseEntity.created(id).build();
+    }
+
+    private void defaultValues(Template template) {
+        Subject subject = SecurityContext.getSubject();
+
+        if(!subject.getRole().equalsIgnoreCase("SYSTEM_ADMIN") || template.getCompanyId()==null) {
+            template.setCompanyId(StringUtils.getIdFromURI(subject.getCompanyHref()));
+        }
     }
 }

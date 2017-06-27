@@ -46,7 +46,7 @@
       }
     }
   },
-  "required":["name", "companyHref", "props"],
+  "required":["name", "props"],
   "additionalProperties": true
 }
 

@@ -6,9 +6,11 @@ import com.ofs.server.form.update.ChangeSet;
 import com.ofs.server.model.OFSErrors;
 import com.ofs.validations.TemplateCreateValidation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Component
 public class ValidateTemplateNameDNE implements TemplateCreateValidation {
 
     @Autowired

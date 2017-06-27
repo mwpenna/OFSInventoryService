@@ -55,7 +55,7 @@ public class TemplateRepository extends BaseCouchbaseRepository<Template>{
 
     private String generateGetByNameQuery() {
         return "SELECT `" + connectionManager.getBucket("template").name() + "`.* FROM `" + connectionManager.getBucket("template").name()
-                + "` where name = $name and companyHref = $companyHref";
+                + "` where name = $name and companyId = $companyId";
     }
 
     private JsonObject generateGetByNameParameters(String name, String companyId) {
