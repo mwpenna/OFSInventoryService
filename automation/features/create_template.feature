@@ -59,19 +59,19 @@ Feature: Template is created when template endpoint is called
     When A request to create a template is received with missing props
     Then the response should have a status of 400
 
-  Scenario: A request to creaate a template is recived with missing required field prop.name
+  Scenario: A request to creaate a template is received with missing required field prop.name
     Given A ADMIN user exists for a company
-    When A request to create a template is received with missing prop.name
+    When A request to create a template with missing prop field name is received
     Then the response should have a status of 400
 
   Scenario: A request to creaate a template is recived with missing required field prop.type
     Given A ADMIN user exists for a company
-    When A request to create a template is received with missing prop.type
+    When A request to create a template with missing prop field type is received
     Then the response should have a status of 400
 
   Scenario: A request to creaate a template is recived with missing required field prop.required
     Given A ADMIN user exists for a company
-    When A request to create a template is received with missing prop.required
+    When A request to create a template with missing prop field required is received
     Then the response should have a status of 400
 
   Scenario: A request to create a template is received with href field

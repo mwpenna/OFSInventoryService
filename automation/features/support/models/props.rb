@@ -11,7 +11,7 @@ class Prop
         name: self.name,
         type: self.type,
         required: self.required
-    }
+    }.delete_if { |key, value| value.to_s.strip.empty? }
   end
 
 end

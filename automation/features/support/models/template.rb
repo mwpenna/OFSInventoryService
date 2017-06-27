@@ -12,4 +12,14 @@ class Template
     }.to_json
   end
 
+  def create_to_hash
+    {
+        name: self.name,
+        companyHref: self.companyHref,
+        props: props.map do |prop|
+          prop.create_hash
+        end
+    }
+  end
+
 end

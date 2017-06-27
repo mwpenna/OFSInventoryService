@@ -16,7 +16,7 @@ public class ValidateTemplateNameDNE implements TemplateCreateValidation {
 
     @Override
     public void validate(Template template, OFSErrors errors) throws Exception {
-        Optional optionalTemplate = templateRepository.getTemplateByName(template.getName());
+        Optional optionalTemplate = templateRepository.getTemplateByName(template.getName(), template.getCompanyHref().toString());
 
         if(optionalTemplate.isPresent()) {
             errors.rejectValue("template.name.exists", "template.name", "Invalid template name. Template already exists.");
