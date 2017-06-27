@@ -50,12 +50,6 @@ Feature: Template is created when template endpoint is called
     Then the response should have a status of 400
     And I should see an error message with name missing
 
-  Scenario: A request to creaate a template is recived with missing required field companyHref
-    Given A ADMIN user exists for a company
-    When A request to create a template is received with missing companyHref
-    Then the response should have a status of 400
-    And I should see an error message with companyHref missing
-
   Scenario: A request to creaate a template is recived with missing required field props
     Given A ADMIN user exists for a company
     When A request to create a template is received with missing props
@@ -102,3 +96,15 @@ Feature: Template is created when template endpoint is called
     Given A ADMIN user and template exists for a company
     When A request to create a duplicate template name is received
     Then the response should have a status of 400
+
+  Scenario: A request to create a template is received by an ADMIN with companyId in the request
+    Given A ADMIN user exists for a company
+    When A request to create a template is received with a companyId
+    Then the response should have a status of 201
+    And I should see the companyId is equal to the user companyId
+
+  Scenario: A request to create a template is received by a SYSTEM_ADMIN with companyId in the request
+    Given A SYSTEM_ADMIN user exists for a company
+    When A request to create a template is received with a companyId
+    Then the response should have a status of 201
+    And I should see the companyId is equal to the requested companyId

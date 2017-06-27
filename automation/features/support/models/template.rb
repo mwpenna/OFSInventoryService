@@ -1,11 +1,11 @@
 class Template
 
-  attr_accessor :name, :companyHref, :props
+  attr_accessor :name, :companyId, :props
 
   def create_to_json
     {
         name: self.name,
-        companyHref: self.companyHref,
+        companyId: self.companyId,
         props: props.map do |prop|
           prop.create_hash
         end
@@ -15,7 +15,7 @@ class Template
   def create_to_hash
     {
         name: self.name,
-        companyHref: self.companyHref,
+        companyId: self.companyId,
         props: props.map do |prop|
           prop.create_hash
         end
