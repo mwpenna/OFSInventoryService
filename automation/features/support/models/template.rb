@@ -5,7 +5,6 @@ class Template
   def create_to_json
     {
         name: self.name,
-        companyId: self.companyId,
         props: props.map do |prop|
           prop.create_hash
         end
@@ -13,6 +12,25 @@ class Template
   end
 
   def create_to_hash
+    {
+        name: self.name,
+        props: props.map do |prop|
+          prop.create_hash
+        end
+    }
+  end
+
+  def create_to_json_with_company_id
+    {
+        name: self.name,
+        companyId: self.companyId,
+        props: props.map do |prop|
+          prop.create_hash
+        end
+    }.to_json
+  end
+
+  def create_to_hash_with_company_id
     {
         name: self.name,
         companyId: self.companyId,
