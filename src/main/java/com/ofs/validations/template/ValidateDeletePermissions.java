@@ -6,7 +6,9 @@ import com.ofs.server.model.OFSErrors;
 import com.ofs.server.security.SecurityContext;
 import com.ofs.server.security.Subject;
 import com.ofs.validations.TemplateDeleteValidation;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ValidateDeletePermissions implements TemplateDeleteValidation {
     @Override
     public void validate(String id, OFSErrors errors) throws Exception {
