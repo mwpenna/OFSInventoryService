@@ -114,7 +114,7 @@ public class TemplateController {
 
         OFSErrors ofsErrors = new OFSErrors();
         templateDeleteValidator.validate(templateId, ofsErrors);
-        
+
         templateRepository.deleteTemplateById(templateId);
         return ResponseEntity.noContent().build();
     }
