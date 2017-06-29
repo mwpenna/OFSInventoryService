@@ -14,6 +14,25 @@ Given(/^A ADMIN user does not exists for a company$/) do
   @service_client.post_to_url(@service_client.get_mock_base_uri + '/users/authenticate/status', request)
 end
 
+Given(/^A ADMIN user and template exists for a company$/) do
+  @companyId = SecureRandom.uuid
+  jwtsubject = FactoryGirl.build(:jwtsubject, role: 'ADMIN', companyHref: 'http://localhost:8080/company/id/'+ @companyId)
+  request = '{"status": 200, "message":'+ jwtsubject.to_json+'}'
+  @service_client.post_to_url(@service_client.get_mock_base_uri + '/users/authenticate/status', request)
+  prop1 = FactoryGirl.build(:prop, name: 'color', required: true, type:'STRING')
+  prop2 = FactoryGirl.build(:prop, name: 'size', required: true, type:'NUMBER')
+  @template = FactoryGirl.build(:template, name: Faker::Name.name , props: [prop1, prop2])
+  @service_client.post_to_url_with_auth("/inventory/template", @template.create_to_json, "Bearer "+ "123")
+end
+
+When(/^A request to create a duplicate template name is received$/) do
+  sleep(1)
+  prop1 = FactoryGirl.build(:prop, name: 'field', required: true, type:'STRING')
+  prop2 = FactoryGirl.build(:prop, name: 'numberField', required: true, type:'NUMBER')
+  template = FactoryGirl.build(:template, name: @template.name, props: [prop1, prop2])
+  @result = @service_client.post_to_url_with_auth("/inventory/template", template.create_to_json, "Bearer "+ "123")
+end
+
 When(/^A request to create a template is received$/) do
   prop1 = FactoryGirl.build(:prop, name: 'color', required: true, type:'STRING')
   prop2 = FactoryGirl.build(:prop, name: 'size', required: true, type:'NUMBER')
