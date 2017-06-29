@@ -53,6 +53,15 @@ public class TemplateRepository extends BaseCouchbaseRepository<Template>{
         }
     }
 
+    public Optional<Template> getTemplateById(String id) {
+        if(id == null) {
+            log.warn("Cannot get template by id with null id");
+            return Optional.empty();
+        }
+
+        return queryForObjectById(id, connectionManager.getBucket("template"), Template.class);
+    }
+
     private String generateGetByNameQuery() {
         return "SELECT `" + connectionManager.getBucket("template").name() + "`.* FROM `" + connectionManager.getBucket("template").name()
                 + "` where name = $name and companyId = $companyId";
