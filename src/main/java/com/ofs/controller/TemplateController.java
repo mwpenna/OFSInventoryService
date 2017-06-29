@@ -12,6 +12,7 @@ import com.ofs.server.security.Authenticate;
 import com.ofs.server.security.SecurityContext;
 import com.ofs.server.security.Subject;
 import com.ofs.utils.StringUtils;
+import com.ofs.validators.template.TemplateCompanyIdValidator;
 import com.ofs.validators.template.TemplateCreateValidator;
 import com.ofs.validators.template.TemplateGetValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @OFSController
@@ -40,6 +43,9 @@ public class TemplateController {
 
     @Autowired
     private TemplateGetValidator templateGetValidator;
+
+    @Autowired
+    private TemplateCompanyIdValidator templateCompanyIdValidator;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ValidationSchema(value = "/template-create.json")
@@ -58,7 +64,7 @@ public class TemplateController {
 
     @GetMapping(value = "/id/{id}")
     @Authenticate
-    @CrossOrigin
+    @CrossOrigin(origins = "*")
     public Template getById(@PathVariable("id") String id) throws Exception {
         log.info("Retreiving template with id: {}", id);
         Optional<Template> templateOptional = templateRepository.getTemplateById(id);
@@ -75,6 +81,24 @@ public class TemplateController {
             throw new NotFoundException();
         }
 
+    }
+
+    @GetMapping(value = "/company/id/{id}")
+    @Authenticate
+    @CrossOrigin(origins = "*")
+    public List<Template> getByCompanyId(@PathVariable("id") String companyId) throws Exception {
+        log.info("Retreiving templates with companyId: {}", companyId);
+        Optional<List<Template>> templateListOptional = templateRepository.getTemplateByCompanyId(companyId);
+
+        OFSErrors ofsErrors = new OFSErrors();
+        templateCompanyIdValidator.validate(null, ofsErrors);
+
+        if(templateListOptional.isPresent()) {
+            return templateListOptional.get();
+        }
+        else {
+            return new ArrayList<>();
+        }
     }
 
     private void defaultValues(Template template) {

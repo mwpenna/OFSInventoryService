@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -53,6 +54,22 @@ public class TemplateRepository extends BaseCouchbaseRepository<Template>{
         }
     }
 
+    public Optional<List<Template>> getTemplateByCompanyId(String companyId) throws Exception {
+        try {
+            ParameterizedN1qlQuery query = ParameterizedN1qlQuery.parameterized(
+                    generateGetByCompanyIdQuery(), generateGetByCompanyIdParameters(companyId));
+            return queryForObjectListByParameters(query, connectionManager.getBucket("template"), Template.class);
+        }
+        catch (NoSuchElementException e) {
+            log.info("No results returned for getTemplatebyName with companyId: {}", companyId);
+            return Optional.empty();
+        }
+        catch (TemporaryFailureException e) {
+            log.error("Temporary Failure with couchbase occured" , e);
+            throw new ServiceUnavailableException();
+        }
+    }
+
     public Optional<Template> getTemplateById(String id) {
         if(id == null) {
             log.warn("Cannot get template by id with null id");
@@ -70,4 +87,14 @@ public class TemplateRepository extends BaseCouchbaseRepository<Template>{
     private JsonObject generateGetByNameParameters(String name, String companyId) {
         return JsonObject.create().put("$name", name).put("$companyId", companyId);
     }
+
+    private String generateGetByCompanyIdQuery() {
+        return "SELECT `" + connectionManager.getBucket("template").name() + "`.* FROM `" + connectionManager.getBucket("template").name()
+                + "` where companyId = $companyId";
+    }
+
+    private JsonObject generateGetByCompanyIdParameters(String companyId) {
+        return JsonObject.create().put("$companyId", companyId);
+    }
+
 }

@@ -1,7 +1,7 @@
 package com.ofs.validations;
 
-/**
- * Created by mpenna on 6/29/17.
- */
-public interface TemplateCompanyIdValidation {
+import com.ofs.model.Template;
+import com.ofs.validators.Validator;
+
+public interface TemplateCompanyIdValidation extends Validator<Template> {
 }
