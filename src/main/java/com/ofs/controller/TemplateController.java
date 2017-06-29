@@ -13,6 +13,7 @@ import com.ofs.server.security.SecurityContext;
 import com.ofs.server.security.Subject;
 import com.ofs.utils.StringUtils;
 import com.ofs.validators.template.TemplateCreateValidator;
+import com.ofs.validators.template.TemplateGetValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -37,6 +38,9 @@ public class TemplateController {
     @Autowired
     private  TemplateCreateValidator templateCreateValidator;
 
+    @Autowired
+    private TemplateGetValidator templateGetValidator;
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ValidationSchema(value = "/template-create.json")
     @Authenticate
@@ -60,7 +64,11 @@ public class TemplateController {
         Optional<Template> templateOptional = templateRepository.getTemplateById(id);
 
         if(templateOptional.isPresent()) {
-            return templateOptional.get();
+            Template template = templateOptional.get();
+            OFSErrors ofsErrors = new OFSErrors();
+            templateGetValidator.validate(template, ofsErrors);
+
+            return template;
         }
         else {
             log.warn("Template with id: {} not found", id);
