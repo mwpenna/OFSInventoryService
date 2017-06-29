@@ -1,10 +1,12 @@
 package com.ofs.repository;
 
 import com.couchbase.client.java.document.json.JsonObject;
+import com.couchbase.client.java.error.DocumentDoesNotExistException;
 import com.couchbase.client.java.error.TemporaryFailureException;
 import com.couchbase.client.java.query.ParameterizedN1qlQuery;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ofs.model.Template;
+import com.ofs.server.errors.NotFoundException;
 import com.ofs.server.errors.ServiceUnavailableException;
 import com.ofs.server.repository.BaseCouchbaseRepository;
 import com.ofs.server.repository.ConnectionManager;
@@ -66,6 +68,24 @@ public class TemplateRepository extends BaseCouchbaseRepository<Template>{
         }
         catch (TemporaryFailureException e) {
             log.error("Temporary Failure with couchbase occured" , e);
+            throw new ServiceUnavailableException();
+        }
+    }
+
+    public void deleteTemplateById(String id) {
+        Objects.requireNonNull(id);
+
+        try{
+            log.info("Attempting to delete user with id: {}", id);
+            delete(id, connectionManager.getBucket("template"));
+            log.info("template with id: {} has been delete", id);
+        }
+        catch (DocumentDoesNotExistException e) {
+            log.warn("Template with id: {} was not found", id);
+            throw new NotFoundException();
+        }
+        catch (TemporaryFailureException e) {
+            log.error("Temporary Failure with couchbase occurred" , e);
             throw new ServiceUnavailableException();
         }
     }

@@ -14,12 +14,14 @@ import com.ofs.server.security.Subject;
 import com.ofs.utils.StringUtils;
 import com.ofs.validators.template.TemplateCompanyIdValidator;
 import com.ofs.validators.template.TemplateCreateValidator;
+import com.ofs.validators.template.TemplateDeleteValidator;
 import com.ofs.validators.template.TemplateGetValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +48,9 @@ public class TemplateController {
 
     @Autowired
     private TemplateCompanyIdValidator templateCompanyIdValidator;
+
+    @Autowired
+    private TemplateDeleteValidator templateDeleteValidator;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ValidationSchema(value = "/template-create.json")
@@ -99,6 +104,19 @@ public class TemplateController {
         else {
             return new ArrayList<>();
         }
+    }
+
+    @DeleteMapping(value = "/id/{id}")
+    @Authenticate
+    @CrossOrigin(origins = "*")
+    public ResponseEntity deleteTemplateById(@PathVariable("id") String templateId) throws Exception {
+        log.info("Deleting template with id: {}", templateId);
+
+        OFSErrors ofsErrors = new OFSErrors();
+        templateDeleteValidator.validate(templateId, ofsErrors);
+        
+        templateRepository.deleteTemplateById(templateId);
+        return ResponseEntity.noContent().build();
     }
 
     private void defaultValues(Template template) {
