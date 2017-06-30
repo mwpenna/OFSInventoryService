@@ -1,6 +1,6 @@
 class Template
 
-  attr_accessor :name, :companyId, :props
+  attr_accessor :name, :companyId, :props, :id, :href, :createdOn
 
   def create_to_json
     {
