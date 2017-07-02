@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "inventory-template",
+  "description": "JSON Inventory Template Update",
+  "type" : "object",
+  "properties": {
+    "id": {
+      "not": {}
+    },
+    "href": {
+      "not": {}
+    },
+    "createdOn": {
+      "not": {}
+    },
+    "name": {
+      "type": "string"
+    },
+    "companyId" : {
+      "not" : {}
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "STRING",
+              "NUMBER",
+              "BOOLEAN"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "name", "type", "required"
+        ]
+      }
+    }
+  },
+  "additionalProperties": true
+}
+

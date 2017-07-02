@@ -99,6 +99,24 @@ public class TemplateRepository extends BaseCouchbaseRepository<Template>{
         return queryForObjectById(id, connectionManager.getBucket("template"), Template.class);
     }
 
+    public void updateTemplate(Template template) throws JsonProcessingException {
+        Objects.requireNonNull(template);
+
+        try {
+            log.info("Attempting to update template with id: {}", template.getId());
+            update(template.getId().toString(), connectionManager.getBucket("users"), template);
+            log.info("template with id: {} has been updated", template.getId());
+        }
+        catch(DocumentDoesNotExistException e) {
+            log.warn("Template with id: {} was not found", template.getId());
+            throw new NotFoundException();
+        }
+        catch (TemporaryFailureException e) {
+            log.error("Temporary Failure with couchbase occured" , e);
+            throw new ServiceUnavailableException();
+        }
+    }
+
     private String generateGetByNameQuery() {
         return "SELECT `" + connectionManager.getBucket("template").name() + "`.* FROM `" + connectionManager.getBucket("template").name()
                 + "` where name = $name and companyId = $companyId";

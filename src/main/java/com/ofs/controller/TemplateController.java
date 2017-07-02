@@ -7,6 +7,7 @@ import com.ofs.server.OFSServerId;
 import com.ofs.server.errors.NotFoundException;
 import com.ofs.server.form.OFSServerForm;
 import com.ofs.server.form.ValidationSchema;
+import com.ofs.server.form.update.ChangeSet;
 import com.ofs.server.model.OFSErrors;
 import com.ofs.server.security.Authenticate;
 import com.ofs.server.security.SecurityContext;
@@ -119,6 +120,29 @@ public class TemplateController {
 
         templateRepository.deleteTemplateById(templateId);
         return ResponseEntity.noContent().build();
+    }
+
+    @ValidationSchema(value = "/template-update.json")
+    @PostMapping(value = "/id/{id}")
+    @Authenticate
+    @CrossOrigin(origins = "*")
+    public ResponseEntity updateTemplateById(@PathVariable("id") String templateId, OFSServerForm<Template> form) throws Exception {
+        Optional<Template> templateOptional = templateRepository.getTemplateById(templateId);
+
+        if(templateOptional.isPresent()) {
+            Template template = templateOptional.get();
+
+            ChangeSet changeSet = form.update(template);
+
+            if(changeSet.size()>0) {
+                templateRepository.updateTemplate(template);
+            }
+            return ResponseEntity.noContent().build();
+        }
+        else {
+            log.error("Template with id: {} not found", templateId);
+            throw new NotFoundException();
+        }
     }
 
     private void defaultValues(Template template) {
