@@ -17,6 +17,7 @@ import com.ofs.validators.template.TemplateCompanyIdValidator;
 import com.ofs.validators.template.TemplateCreateValidator;
 import com.ofs.validators.template.TemplateDeleteValidator;
 import com.ofs.validators.template.TemplateGetValidator;
+import com.ofs.validators.template.TemplateUpdateValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -53,6 +54,9 @@ public class TemplateController {
 
     @Autowired
     private TemplateDeleteValidator templateDeleteValidator;
+
+    @Autowired
+    private TemplateUpdateValidator templateUpdateValidator;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ValidationSchema(value = "/template-create.json")
@@ -133,6 +137,9 @@ public class TemplateController {
             Template template = templateOptional.get();
 
             ChangeSet changeSet = form.update(template);
+
+            OFSErrors ofsErrors = new OFSErrors();
+            templateUpdateValidator.validate(template, ofsErrors);
 
             if(changeSet.size()>0) {
                 templateRepository.updateTemplate(template);
