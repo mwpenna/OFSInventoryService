@@ -9,6 +9,7 @@ Given(/^A (.*?) user exists and template exists for a company$/) do |role|
   result = @service_client.post_to_url_with_auth("/inventory/template", @template.create_to_json, "Bearer "+ "123")
   @location = result.headers['location']
   @template.companyId = @companyId
+  @template.id = @location.split("/id/").last
   jwtsubject = FactoryGirl.build(:jwtsubject, role: role, companyHref: 'http://localhost:8080/company/id/'+ @companyId)
   request = '{"status": 200, "message":'+ jwtsubject.to_json+'}'
   @service_client.post_to_url(@service_client.get_mock_base_uri + '/users/authenticate/status', request)

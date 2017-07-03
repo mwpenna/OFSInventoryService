@@ -104,7 +104,7 @@ public class TemplateRepository extends BaseCouchbaseRepository<Template>{
 
         try {
             log.info("Attempting to update template with id: {}", template.getId());
-            update(template.getId().toString(), connectionManager.getBucket("users"), template);
+            update(template.getId().toString(), connectionManager.getBucket("template"), template);
             log.info("template with id: {} has been updated", template.getId());
         }
         catch(DocumentDoesNotExistException e) {
