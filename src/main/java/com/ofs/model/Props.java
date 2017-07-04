@@ -14,4 +14,5 @@ public class Props {
     private String name;
     private Type type;
     private boolean required;
+    private String value;
 }

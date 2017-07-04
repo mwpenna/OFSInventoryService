@@ -6,6 +6,7 @@ FactoryGirl.define do
     name "tmp"
     type "STRING"
     required false
+    value "value"
   end
 
 end

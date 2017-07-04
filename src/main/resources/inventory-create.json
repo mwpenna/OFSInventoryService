@@ -40,20 +40,18 @@
             "type": "string"
           },
           "type": {
-            "type": "string",
-            "enum": [
-              "STRING",
-              "NUMBER",
-              "BOOLEAN"
-            ]
+            "not": {}
           },
           "required": {
             "not": {}
+          },
+          "value" : {
+            "type" : "string"
           }
         },
         "additionalProperties": false,
         "required": [
-          "name", "type"
+          "name", "value"
         ]
       }
     }
