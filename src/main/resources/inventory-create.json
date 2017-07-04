@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "inventory",
+  "description": "JSON Inventory Create",
+  "type" : "object",
+  "properties": {
+    "id": {
+      "not": {}
+    },
+    "href": {
+      "not": {}
+    },
+    "createdOn": {
+      "not": {}
+    },
+    "type": {
+      "type": "string"
+    },
+    "companyId" : {
+      "type": "string"
+    },
+    "price" : {
+      "type": "double"
+    },
+    "quantity" : {
+      "type": "integer"
+    },
+    "name" : {
+      "type": "string"
+    },
+    "description" : {
+      "type": "string"
+    },
+    "props": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "STRING",
+              "NUMBER",
+              "BOOLEAN"
+            ]
+          },
+          "required": {
+            "not": {}
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "name", "type"
+        ]
+      }
+    }
+  },
+  "required":["type", "name", "quantity", "price"],
+  "additionalProperties": true
+}
+

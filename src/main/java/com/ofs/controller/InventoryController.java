@@ -12,6 +12,7 @@ import com.ofs.server.security.Authenticate;
 import com.ofs.server.security.SecurityContext;
 import com.ofs.server.security.Subject;
 import com.ofs.utils.StringUtils;
+import com.ofs.validators.inventory.InventoryCreateValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,6 +31,9 @@ public class InventoryController {
     @Autowired
     private InventoryRepository inventoryRepository;
 
+    @Autowired
+    private InventoryCreateValidator inventoryCreateValidator;
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ValidationSchema(value = "/inventory-create.json")
     @Authenticate
@@ -37,7 +41,10 @@ public class InventoryController {
     public ResponseEntity create(@OFSServerId URI id, OFSServerForm<Inventory> form) throws Exception{
         Inventory inventory = form.create(id);
         defaultValues(inventory);
-        
+
+        OFSErrors ofsErrors = new OFSErrors();
+        inventoryCreateValidator.validate(inventory, ofsErrors);
+
         inventoryRepository.addInventory(inventory);
         return ResponseEntity.created(id).build();
     }
