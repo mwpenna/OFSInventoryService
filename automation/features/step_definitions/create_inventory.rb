@@ -35,3 +35,18 @@ When(/^A request to create an inventory item is received with invalid field (.*?
   body[field.to_sym] = "test"
   @result = @service_client.post_to_url_with_auth("/inventory", body.to_json, "Bearer "+ "123")
 end
+
+When(/^A request to create an inventory item is received with invalid prop (.*?)$/) do |field|
+  props = []
+  @template.props.each do |property|
+    prop = FactoryGirl.build(:prop, name: property.name, value: "1234")
+    props << prop
+  end
+
+  @inventory = FactoryGirl.build(:inventory, props: props)
+  body =  @inventory.create_hash
+  body[:props].each do |prop|
+    prop[field.to_sym] = "test"
+  end
+  @result = @service_client.post_to_url_with_auth("/inventory", body.to_json, "Bearer "+ "123")
+end
