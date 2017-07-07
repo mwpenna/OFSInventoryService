@@ -100,6 +100,10 @@ Feature: Inventory is created when inventory endpoint is called
     When A request to create an inventory item is received with missing prop values
     Then the response should have a status of 400
 
+  Scenario: A request to create an inventory item is received with missing required prop list
+    Given A ADMIN user exists and template exists for a company
+    When A request to create an inventory item is received with missing props
+    Then the response should have a status of 400
 
 
 
