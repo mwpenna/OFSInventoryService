@@ -28,3 +28,10 @@ When(/^A request to create an inventory item is received with missing prop (.*?)
   end
   @result = @service_client.post_to_url_with_auth("/inventory", body.to_json, "Bearer "+ "123")
 end
+
+When(/^A request to create an inventory item is received with invalid field (.*?)$/) do |field|
+  @inventory = FactoryGirl.build(:inventory)
+  body =  @inventory.create_hash
+  body[field.to_sym] = "test"
+  @result = @service_client.post_to_url_with_auth("/inventory", body.to_json, "Bearer "+ "123")
+end
