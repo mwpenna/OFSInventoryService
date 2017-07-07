@@ -10,7 +10,7 @@ class Inventory
         name: self.name,
         description: self.description,
         props: props.map do |prop|
-          prop.create_hash
+          prop.inventory_create_hash
         end
     }.to_json
   end
@@ -23,7 +23,7 @@ class Inventory
         name: self.name,
         description: self.description,
         props: props.map do |prop|
-          prop.create_hash
+          prop.inventory_create_hash
         end
     }
   end

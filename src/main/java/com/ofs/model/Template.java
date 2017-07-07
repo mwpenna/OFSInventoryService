@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -36,7 +37,12 @@ public class Template implements OFSEntity{
         this.setId(UUID.fromString((String)map.get("id")));
         this.setName((String) map.get("name"));
         this.setCompanyId((String) map.get("companyId"));
-        this.setProps((List) map.get("props"));
+        ArrayList<Props> props = new ArrayList<>();
+
+        for(Object prop : (List) map.get("props")) {
+            props.add(new Props((Map) prop));
+        }
+        this.setProps(props);
     }
 
     private UUID id;

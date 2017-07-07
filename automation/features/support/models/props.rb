@@ -14,4 +14,11 @@ class Prop
     }.delete_if { |key, value| value.to_s.strip.empty? }
   end
 
+  def inventory_create_hash
+    {
+        name: self.name,
+        value: self.value
+    }
+  end
+
 end
