@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -25,5 +26,14 @@ public class InventoryRepository extends BaseCouchbaseRepository<Inventory> {
         log.info("Attempting to add template with id: {}", inventory.getId());
         add(inventory.getId().toString(), connectionManager.getBucket("inventory"), inventory);
         log.info("Template with id: {} has been added", inventory.getId());
+    }
+
+    public Optional<Inventory> getInventoryById(String id) {
+        if(id == null) {
+            log.warn("Cannot get template by id with null id");
+            return Optional.empty();
+        }
+
+        return queryForObjectById(id, connectionManager.getBucket("inventory"), Inventory.class);
     }
 }
