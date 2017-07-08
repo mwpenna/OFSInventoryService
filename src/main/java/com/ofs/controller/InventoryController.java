@@ -1,7 +1,6 @@
 package com.ofs.controller;
 
 import com.ofs.model.Inventory;
-import com.ofs.model.Template;
 import com.ofs.repository.InventoryRepository;
 import com.ofs.server.OFSController;
 import com.ofs.server.OFSServerId;
@@ -13,7 +12,8 @@ import com.ofs.server.security.Authenticate;
 import com.ofs.server.security.SecurityContext;
 import com.ofs.server.security.Subject;
 import com.ofs.utils.StringUtils;
-import com.ofs.validations.InventoryGetValidation;
+import com.ofs.validations.InventoryCompanyValidation;
+import com.ofs.validators.inventory.InventoryCompanyIdValidator;
 import com.ofs.validators.inventory.InventoryCreateValidator;
 import com.ofs.validators.inventory.InventoryGetValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +25,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @OFSController
@@ -42,6 +45,12 @@ public class InventoryController {
 
     @Autowired
     private InventoryGetValidator inventoryGetValidator;
+
+    @Autowired
+    private InventoryCompanyIdValidator inventoryCompanyIdValidator;
+
+    @Autowired
+    private InventoryCompanyValidation inventoryCompanyValidation;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ValidationSchema(value = "/inventory-create.json")
@@ -75,6 +84,26 @@ public class InventoryController {
         else {
             log.warn("Inventory Item with id: {} not found", id);
             throw new NotFoundException();
+        }
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/company/id/{id}")
+    @Authenticate
+    @CrossOrigin(origins = "*")
+    public List<Inventory> getByCompanyId(@PathVariable("id") String companyId) throws Exception {
+        log.info("Retreiving invenory items with companyId: {}", companyId);
+        Optional<List<Inventory>> inventoryListOptional = inventoryRepository.getInventoryByCompanyId(companyId);
+
+        if(inventoryListOptional.isPresent()) {
+            OFSErrors errors = new OFSErrors();
+            inventoryCompanyIdValidator.validate(null, errors);
+            inventoryCompanyValidation.validate(companyId, errors);
+
+            return inventoryListOptional.get();
+        }
+        else {
+            return new ArrayList<>();
         }
     }
 
