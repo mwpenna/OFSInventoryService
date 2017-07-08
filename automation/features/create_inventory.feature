@@ -37,7 +37,7 @@ Feature: Inventory is created when inventory endpoint is called
 
   Scenario: A request to create an inventory item is received by a user that does not exists
     Given A ADMIN user does not exists for a company
-    When A request to create an inventory item is received
+    When A request to create an inventory item is received for a user that does not exists
     Then the response should have a status of 403
 
   Scenario: A request to create an inventory item is received with missing field quantity
@@ -97,7 +97,7 @@ Feature: Inventory is created when inventory endpoint is called
 
   Scenario: A request to create an inventory item is received with missing prop values
     Given A ADMIN user exists and template exists for a company
-    When A request to create an inventory item is received with missing prop values
+    When A request to create an inventory item is received with missing prop value
     Then the response should have a status of 400
 
   Scenario: A request to create an inventory item is received with missing required prop list
