@@ -44,66 +44,73 @@ Feature: Inventory is created when inventory endpoint is called
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received without quantity
     Then the response should have a status of 400
+    And I should see an inventory error message with quantity missing
 
   Scenario: A request to create an inventory item is received with missing field type
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received without type
     Then the response should have a status of 400
+    And I should see an inventory error message with type missing
 
   Scenario: A request to create an inventory item is received with missing field name
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received without name
     Then the response should have a status of 400
+    And I should see an inventory error message with name missing
 
   Scenario: A request to create an inventory item is received with missing prop field name
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received with missing prop name
     Then the response should have a status of 400
+    And I should see an inventory error message indicating prop name missing
 
   Scenario: A request to create an inventory item is received with missing prop field type
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received with missing prop value
     Then the response should have a status of 400
+    And I should see an inventory error message indicating prop value missing
 
   Scenario: A request to create an inventory item is received with invalid field href
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received with invalid field href
     Then the response should have a status of 400
+    And I should see an inventory error message with href not allowed
 
   Scenario: A request to create an inventory item is received with invalid field createdOn
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received with invalid field createdOn
     Then the response should have a status of 400
+    And I should see an inventory error message with createdOn not allowed
 
   Scenario: A request to create an inventory item is received with invalid field id
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received with invalid field id
     Then the response should have a status of 400
+    And I should see an inventory error message with id not allowed
 
   Scenario: A request to create an inventory item is received with invalid prop field required
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received with invalid prop required
     Then the response should have a status of 400
+    And I should see an inventory error message indicating prop required invalid
 
   Scenario: A request to create an inventory item is received with invalid prop field type
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received with invalid prop type
     Then the response should have a status of 400
+    And I should see an inventory error message indicating prop type invalid
 
   Scenario: A request to create an inventory item is received with an inventory type that does not match a company's template
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received with an invalid inventory type
     Then the response should have a status of 400
-
-  Scenario: A request to create an inventory item is received with missing prop values
-    Given A ADMIN user exists and template exists for a company
-    When A request to create an inventory item is received with missing prop value
-    Then the response should have a status of 400
+    And I should see an inventory error message indicating invalid inventory type
 
   Scenario: A request to create an inventory item is received with missing required prop list
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received with missing props
     Then the response should have a status of 400
+    And I should see an inventory error message indicating required prop missing
 
 
 
