@@ -7,10 +7,11 @@ import com.ofs.server.model.OFSErrors;
 import com.ofs.server.security.SecurityContext;
 import com.ofs.server.security.Subject;
 import com.ofs.validations.InventoryCreateValidation;
+import com.ofs.validations.InventoryDeleteValidation;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ValidateInventoryCreatePermissions implements InventoryCreateValidation{
+public class ValidateInventoryCreateDeletePermissions implements InventoryCreateValidation, InventoryDeleteValidation{
 
     @Override
     public void validate(Inventory inventory, OFSErrors errors) throws Exception {

@@ -14,13 +14,16 @@ import com.ofs.server.security.Subject;
 import com.ofs.utils.StringUtils;
 import com.ofs.validations.InventoryCompanyValidation;
 import com.ofs.validators.inventory.InventoryCompanyIdValidator;
+import com.ofs.validators.inventory.InventoryCompanyValidator;
 import com.ofs.validators.inventory.InventoryCreateValidator;
+import com.ofs.validators.inventory.InventoryDeleteValidator;
 import com.ofs.validators.inventory.InventoryGetValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,7 +53,10 @@ public class InventoryController {
     private InventoryCompanyIdValidator inventoryCompanyIdValidator;
 
     @Autowired
-    private InventoryCompanyValidation inventoryCompanyValidation;
+    private InventoryCompanyValidator inventoryCompanyValidation;
+
+    @Autowired
+    private InventoryDeleteValidator inventoryDeleteValidator;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ValidationSchema(value = "/inventory-create.json")
@@ -104,6 +110,24 @@ public class InventoryController {
         }
         else {
             return new ArrayList<>();
+        }
+    }
+
+    @DeleteMapping(value = "/id/{id}")
+    @Authenticate
+    public ResponseEntity delete(@PathVariable("id") String id) throws Exception {
+        OFSErrors ofsErrors = new OFSErrors();
+        inventoryDeleteValidator.validate(null, ofsErrors);
+
+        Optional<Inventory> inventoryOptional = inventoryRepository.getInventoryById(id);
+
+        if(inventoryOptional.isPresent()) {
+            inventoryCompanyValidation.validate(inventoryOptional.get().getCompanyId(), ofsErrors);
+            inventoryRepository.deleteTemplateById(id);
+            return ResponseEntity.noContent().build();
+        }
+        else {
+            throw new NotFoundException();
         }
     }
 
