@@ -15,6 +15,7 @@ Given(/^A (.*?) user exists and templates exists for a company$/) do |role|
     @templates << template
   end
 
+  sleep(2)
   jwtsubject = FactoryGirl.build(:jwtsubject, role: role, companyHref: 'http://localhost:8080/company/id/'+ @companyId)
   request = '{"status": 200, "message":'+ jwtsubject.to_json+'}'
   @service_client.post_to_url(@service_client.get_mock_base_uri + '/users/authenticate/status', request)
