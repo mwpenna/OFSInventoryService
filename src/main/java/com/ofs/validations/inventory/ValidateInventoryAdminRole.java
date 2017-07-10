@@ -11,7 +11,7 @@ import com.ofs.validations.InventoryGetValidation;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ValidateAdminRole implements InventoryGetValidation {
+public class ValidateInventoryAdminRole implements InventoryGetValidation {
     @Override
     public void validate(Inventory inventory, OFSErrors errors) throws Exception {
         Subject subject = SecurityContext.getSubject();

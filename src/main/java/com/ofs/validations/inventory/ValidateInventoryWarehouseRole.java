@@ -11,12 +11,12 @@ import com.ofs.validations.InventoryGetValidation;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ValidateCustomerRole implements InventoryGetValidation, InventoryCompanyIdValidation {
+public class ValidateInventoryWarehouseRole implements InventoryGetValidation, InventoryCompanyIdValidation {
     @Override
     public void validate(Inventory inventory, OFSErrors errors) throws Exception {
         Subject subject = SecurityContext.getSubject();
 
-        if(subject.getRole().equals("CUSTOMER")) {
+        if(subject.getRole().equals("WAREHOUSE")) {
             throw new UnauthorizedException("OAuth", "OFSServer");
         }
     }

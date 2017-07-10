@@ -6,20 +6,18 @@ import com.ofs.server.form.update.ChangeSet;
 import com.ofs.server.model.OFSErrors;
 import com.ofs.server.security.SecurityContext;
 import com.ofs.server.security.Subject;
-import com.ofs.utils.StringUtils;
-import com.ofs.validations.InventoryGetValidation;
+import com.ofs.validations.InventoryCreateValidation;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ValidateAccountManagerRole implements InventoryGetValidation {
+public class ValidateInventoryCreatePermissions implements InventoryCreateValidation{
+
     @Override
     public void validate(Inventory inventory, OFSErrors errors) throws Exception {
         Subject subject = SecurityContext.getSubject();
 
-        if(subject.getRole().equals("ACCOUNT_MANAGER")) {
-            if(!StringUtils.getIdFromURI(subject.getCompanyHref()).equals(inventory.getCompanyId())) {
-                throw new UnauthorizedException("OAuth", "OFSServer");
-            }
+        if(subject.getRole().equalsIgnoreCase("CUSTOMER") || subject.getRole().equalsIgnoreCase("WAREHOUSE")) {
+            throw new UnauthorizedException("OAuth", "OFSServer");
         }
     }
 
