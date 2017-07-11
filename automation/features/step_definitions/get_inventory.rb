@@ -14,10 +14,11 @@ Given(/^A (.*?) user exists and inventory item exists for a company$/) do |role|
 
   props = []
   @template.props.each do |property|
-    prop = FactoryGirl.build(:prop, name: property.name, value: "1234")
+    prop = FactoryGirl.build(:prop, name: property.name, required: property.required, type: property.type, value: "1234")
     props << prop
   end
   @inventory = FactoryGirl.build(:inventory, companyId: @companyId, props: props, type: @template.name)
+  sleep(0.1)
   result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
   @location = result.headers['location']
 
@@ -44,7 +45,6 @@ And(/^I should see the inventory item was returned$/) do
 
   @result["props"].each do |property|
     prop = @inventory.props.detect{|u| u.name == property['name']}
-    binding.pry
     expect(property["name"]).to eql prop.name
     expect(property["required"]).to eql prop.required
     expect(property["type"]).to eql prop.type
