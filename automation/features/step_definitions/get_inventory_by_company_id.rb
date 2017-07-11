@@ -30,6 +30,12 @@ Given(/^A (.*?) user exists and inventory exists for a different company$/) do |
   JWTSubject.new().generate_and_create_jwt_subject({role: role, companyId: SecureRandom.uuid})
 end
 
+Given(/^A company exists without inventory$/) do
+  @companyId = SecureRandom.uuid
+  JWTSubject.new().generate_and_create_jwt_subject({role: 'ADMIN', companyId: @companyId})
+end
+
+
 When(/^A request to get the inventory by company id is received$/) do
   @companyId ||= SecureRandom.uuid
   @result = @service_client.get_by_url_with_auth(@service_client.get_base_uri + '/inventory/company/id/' + @companyId, "Bearer 123")
