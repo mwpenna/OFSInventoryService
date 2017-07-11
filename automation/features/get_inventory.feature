@@ -13,7 +13,7 @@ Feature: Inventory is retrieved when get inventory endpoint is called by user wi
     Then the response should have a status of 200
     And I should see the inventory item was returned
 
-  Scenario: A request to get an inventory item is received by a ADMIN
+  Scenario: A request to get an inventory item for a different company is received by a ADMIN
     Given A ADMIN user exists and inventory item exists for a different company
     When A request to get the inventory item is received
     Then the response should have a status of 400
@@ -24,7 +24,7 @@ Feature: Inventory is retrieved when get inventory endpoint is called by user wi
     Then the response should have a status of 200
     And I should see the inventory item was returned
 
-  Scenario: A request to get a inventory item is received by a ACCOUNT_MANAGER
+  Scenario: A request to get a inventory item for a different company is received by a ACCOUNT_MANAGER
     Given A ACCOUNT_MANAGER user exists and inventory item exists for a different company
     When A request to get the inventory item is received
     Then the response should have a status of 400
