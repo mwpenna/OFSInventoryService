@@ -35,6 +35,12 @@ Given(/^A company exists without inventory$/) do
   JWTSubject.new().generate_and_create_jwt_subject({role: 'ADMIN', companyId: @companyId})
 end
 
+When(/^A request to get the inventory by a SYSTEM_ADMIN for a company id that does not exists is received$/) do
+  @companyId = SecureRandom.uuid
+  JWTSubject.new().generate_and_create_jwt_subject({role: 'SYSTEM_ADMIN', companyId: @companyId})
+  @result = @service_client.get_by_url_with_auth(@service_client.get_base_uri + '/inventory/company/id/' + @companyId, "Bearer 123")
+end
+
 
 When(/^A request to get the inventory by company id is received$/) do
   @companyId ||= SecureRandom.uuid
