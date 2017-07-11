@@ -10,7 +10,7 @@ public class Props {
     public Props(Map propMap) {
         this.name = (String) propMap.get("name");
         String type = (String) propMap.get("type");
-        this.type = Type.valueOf(type);
+        this.type = type != null ? Type.valueOf(type) : null;
         this.required = (Boolean) propMap.get("required");
         this.value = (String) propMap.get("value");
     }

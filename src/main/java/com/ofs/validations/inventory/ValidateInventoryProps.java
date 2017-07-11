@@ -26,11 +26,15 @@ public class ValidateInventoryProps implements InventoryCreateValidation {
             Template template = templateOptional.get();
 
             template.getProps().forEach(prop -> {
-                if(prop.isRequired()) {
-                    Optional<Props> propsOptional = inventory.getProps().stream().filter(inventoryProp ->  inventoryProp.getName().equalsIgnoreCase(prop.getName())).findFirst();
+                Optional<Props> propsOptional = inventory.getProps().stream().filter(inventoryProp ->  inventoryProp.getName().equalsIgnoreCase(prop.getName())).findFirst();
 
-                    if(!propsOptional.isPresent()) {
+                if(propsOptional.isPresent()) {
+                    defaultSystemProps(propsOptional.get(), prop);
+                }
+                else {
+                    if(prop.isRequired()) {
                         errors.rejectValue("inventory_required_prop_missing", "Validation error. Missing required template property.");
+
                     }
                 }
             });
@@ -40,5 +44,10 @@ public class ValidateInventoryProps implements InventoryCreateValidation {
     @Override
     public void validate(ChangeSet changeSet, Inventory inventory, OFSErrors errors) throws Exception {
         validate(inventory, errors);
+    }
+
+    private void defaultSystemProps(Props inventoryProp, Props templateProp) {
+        inventoryProp.setRequired(templateProp.isRequired());
+        inventoryProp.setType(templateProp.getType());
     }
 }

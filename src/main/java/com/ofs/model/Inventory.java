@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.net.URI;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -47,11 +48,17 @@ public class Inventory implements OFSEntity {
         this.setId(UUID.fromString((String)map.get("id")));
         this.setType((String) map.get("type"));
         this.setCompanyId((String) map.get("companyId"));
-        this.setProps((List) map.get("props"));
         this.setQuantity((int) map.get("quantity"));
         this.setPrice((double) map.get("price"));
         this.setName((String) map.get("name"));
         this.setDescription((String) map.get("description"));
+
+        ArrayList<Props> props = new ArrayList<>();
+
+        for(Object prop : (List) map.get("props")) {
+            props.add(new Props((Map) prop));
+        }
+        this.setProps(props);
     }
 
     @JsonIgnore
