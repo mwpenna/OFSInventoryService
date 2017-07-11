@@ -3,7 +3,7 @@ Given(/^A (.*?) user exists and inventory exists for a company$/) do |role|
   JWTSubject.new().generate_and_create_jwt_subject({role: 'ADMIN', companyId: @companyId})
   @template = Template.new().generate_and_create_template({companyId: @companyId})
   sleep(0.1)
-  
+
   @inventory = []
   rand(2..5).times do
     inventory = Inventory.new().generate_and_create_inventory({template: @template, companyId: @companyId,
@@ -15,6 +15,7 @@ Given(/^A (.*?) user exists and inventory exists for a company$/) do |role|
 end
 
 When(/^A request to get the inventory by company id is received$/) do
+  @companyId ||= SecureRandom.uuid
   @result = @service_client.get_by_url_with_auth(@service_client.get_base_uri + '/inventory/company/id/' + @companyId, "Bearer 123")
 end
 
