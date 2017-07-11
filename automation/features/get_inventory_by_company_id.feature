@@ -44,7 +44,7 @@ Feature: Inventory list is retrieved when get Inventory endpoint is called by us
     When A request to get the inventory by company id is received
     Then the response should have a status of 400
 
-  Scenario: An CUSTOMER makes a request to get inventory for a different company
+  Scenario: A CUSTOMER makes a request to get inventory for a different company
     Given A CUSTOMER user exists and inventory exists for a different company
     When A request to get the inventory by company id is received
     Then the response should have a status of 400
@@ -66,6 +66,6 @@ Feature: Inventory list is retrieved when get Inventory endpoint is called by us
     And I should see an empty list was returned
 
   Scenario: Empty inventory list is returned when a company does not exists
-    When A request to get the inventory for a company id that does not exists is received
+    When A request to get the inventory by a SYSTEM_ADMIN for a company id that does not exists is received
     Then the response should have a status of 200
     And I should see an empty list was returned

@@ -1,6 +1,24 @@
+require 'factory_girl'
+require 'faker'
+
 class Template
 
-  attr_accessor :name, :companyId, :props, :id, :href, :createdOn
+  attr_accessor :name, :companyId, :props, :id, :href, :createdOn, :location
+
+  def generate_and_create_template(args={})
+    prop1 = FactoryGirl.build(:prop, name: 'color', required: true, type:'STRING')
+    prop2 = FactoryGirl.build(:prop, name: 'size', required: true, type:'NUMBER')
+    @props = [prop1, prop2]
+    @name = Faker::Name.name
+
+    service_client = ServiceClient.new
+    result = service_client.post_to_url_with_auth("/inventory/template", create_to_json, "Bearer "+ "123")
+
+    @location = result.headers['location']
+    @companyId = args[:companyId]
+    @id = location.split("/id/").last
+    self
+  end
 
   def create_to_json
     {
@@ -77,4 +95,5 @@ class Template
         companyId: self.companyId
     }.to_json
   end
+
 end
