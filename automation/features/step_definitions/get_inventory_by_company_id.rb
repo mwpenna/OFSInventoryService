@@ -14,6 +14,22 @@ Given(/^A (.*?) user exists and inventory exists for a company$/) do |role|
   JWTSubject.new().generate_and_create_jwt_subject({role: role, companyId: @companyId})
 end
 
+Given(/^A (.*?) user exists and inventory exists for a different company$/) do |role|
+  @companyId = SecureRandom.uuid
+  JWTSubject.new().generate_and_create_jwt_subject({role: 'ADMIN', companyId: @companyId})
+  @template = Template.new().generate_and_create_template({companyId: @companyId})
+  sleep(0.1)
+
+  @inventory = []
+  rand(2..5).times do
+    inventory = Inventory.new().generate_and_create_inventory({template: @template, companyId: @companyId,
+                                                               createProps: true, name: Faker::Name.name});
+    @inventory << inventory
+  end
+  sleep(0.1)
+  JWTSubject.new().generate_and_create_jwt_subject({role: role, companyId: SecureRandom.uuid})
+end
+
 When(/^A request to get the inventory by company id is received$/) do
   @companyId ||= SecureRandom.uuid
   @result = @service_client.get_by_url_with_auth(@service_client.get_base_uri + '/inventory/company/id/' + @companyId, "Bearer 123")
