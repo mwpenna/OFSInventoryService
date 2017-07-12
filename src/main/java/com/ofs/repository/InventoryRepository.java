@@ -80,6 +80,24 @@ public class InventoryRepository extends BaseCouchbaseRepository<Inventory> {
         }
     }
 
+    public void updateInventory(Inventory inventory) throws JsonProcessingException {
+        Objects.requireNonNull(inventory);
+
+        try{
+            log.info("Attempting to update inventory with id: {}", inventory.getId());
+            update(inventory.getId().toString(), connectionManager.getBucket("inventory"), inventory);
+            log.info("Inventory with id: {} has been updated", inventory.getId());
+        }
+        catch(DocumentDoesNotExistException e) {
+            log.warn("Inventory with id: {} was not found", inventory.getId());
+            throw new NotFoundException();
+        }
+        catch (TemporaryFailureException e) {
+            log.error("Temporary Failure with Couchbase occurred" , e);
+            throw new ServiceUnavailableException();
+        }
+    }
+
     private String generateGetByCompanyIdQuery() {
         return "SELECT `" + connectionManager.getBucket("inventory").name() + "`.* FROM `" + connectionManager.getBucket("inventory").name()
                 + "` where companyId = $companyId";

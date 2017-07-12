@@ -112,7 +112,7 @@ public class TemplateRepository extends BaseCouchbaseRepository<Template>{
             throw new NotFoundException();
         }
         catch (TemporaryFailureException e) {
-            log.error("Temporary Failure with couchbase occured" , e);
+            log.error("Temporary Failure with couchbase occurred" , e);
             throw new ServiceUnavailableException();
         }
     }

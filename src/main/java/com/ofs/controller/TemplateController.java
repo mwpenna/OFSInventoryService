@@ -1,5 +1,6 @@
 package com.ofs.controller;
 
+import com.ofs.model.Inventory;
 import com.ofs.model.Template;
 import com.ofs.repository.TemplateRepository;
 import com.ofs.server.OFSController;

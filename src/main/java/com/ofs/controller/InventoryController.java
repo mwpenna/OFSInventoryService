@@ -7,6 +7,7 @@ import com.ofs.server.OFSServerId;
 import com.ofs.server.errors.NotFoundException;
 import com.ofs.server.form.OFSServerForm;
 import com.ofs.server.form.ValidationSchema;
+import com.ofs.server.form.update.ChangeSet;
 import com.ofs.server.model.OFSErrors;
 import com.ofs.server.security.Authenticate;
 import com.ofs.server.security.SecurityContext;
@@ -18,6 +19,7 @@ import com.ofs.validators.inventory.InventoryCompanyValidator;
 import com.ofs.validators.inventory.InventoryCreateValidator;
 import com.ofs.validators.inventory.InventoryDeleteValidator;
 import com.ofs.validators.inventory.InventoryGetValidator;
+import com.ofs.validators.inventory.InventoryUpdateValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +60,9 @@ public class InventoryController {
 
     @Autowired
     private InventoryDeleteValidator inventoryDeleteValidator;
+
+    @Autowired
+    private InventoryUpdateValidator inventoryUpdateValidator;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ValidationSchema(value = "/inventory-create.json")
@@ -127,6 +133,33 @@ public class InventoryController {
             return ResponseEntity.noContent().build();
         }
         else {
+            throw new NotFoundException();
+        }
+    }
+
+    @ValidationSchema(value = "/inventory-update.json")
+    @PostMapping(value = "/id/{id}")
+    @Authenticate
+    @CrossOrigin(origins = "*")
+    public ResponseEntity updateInventoryById(@PathVariable("id") String inventoryId, OFSServerForm<Inventory> form) throws Exception {
+        Optional<Inventory> inventoryOptional = inventoryRepository.getInventoryById(inventoryId);
+
+        if(inventoryOptional.isPresent()) {
+            Inventory inventory = inventoryOptional.get();
+
+            ChangeSet changeSet = form.update(inventory);
+
+            OFSErrors ofsErrors = new OFSErrors();
+            inventoryUpdateValidator.validate(inventory, ofsErrors);
+            inventoryCompanyValidation.validate(inventory.getCompanyId(), ofsErrors);
+
+            if(changeSet.size()>0) {
+                inventoryRepository.updateInventory(inventory);
+            }
+            return ResponseEntity.noContent().build();
+        }
+        else {
+            log.error("Inventory with id: {} not found", inventoryId);
             throw new NotFoundException();
         }
     }
