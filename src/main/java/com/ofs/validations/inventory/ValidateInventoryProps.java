@@ -7,13 +7,14 @@ import com.ofs.repository.TemplateRepository;
 import com.ofs.server.form.update.ChangeSet;
 import com.ofs.server.model.OFSErrors;
 import com.ofs.validations.InventoryCreateValidation;
+import com.ofs.validations.InventoryUpdateValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
-public class ValidateInventoryProps implements InventoryCreateValidation {
+public class ValidateInventoryProps implements InventoryCreateValidation, InventoryUpdateValidation {
 
     @Autowired
     private TemplateRepository templateRepository;

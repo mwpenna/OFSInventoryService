@@ -53,11 +53,27 @@ public class InventoryRepository extends BaseCouchbaseRepository<Inventory> {
             return queryForObjectListByParameters(query, connectionManager.getBucket("inventory"), Inventory.class);
         }
         catch (NoSuchElementException e) {
-            log.info("No results returned for getTemplatebyName with companyId: {}", companyId);
+            log.info("No results returned for getInventoryByCompanyId with companyId: {}", companyId);
             return Optional.empty();
         }
         catch (TemporaryFailureException e) {
-            log.error("Temporary Failure with couchbase occured" , e);
+            log.error("Temporary Failure with couchbase occurred" , e);
+            throw new ServiceUnavailableException();
+        }
+    }
+
+    public Optional<List<Inventory>> getInventoryByName(String companyId, String name) throws Exception {
+        try{
+            ParameterizedN1qlQuery query = ParameterizedN1qlQuery.parameterized(
+                    generateGetByNameQuery(), generateGetByNameParameters(companyId, name));
+            return queryForObjectListByParameters(query, connectionManager.getBucket("inventory"), Inventory.class);
+        }
+        catch (NoSuchElementException e) {
+            log.info("No results returned for getInventoryByName with name: {}", name);
+            return Optional.empty();
+        }
+        catch (TemporaryFailureException e) {
+            log.error("Temporary Failure with couchbase occurred" , e);
             throw new ServiceUnavailableException();
         }
     }
@@ -105,5 +121,14 @@ public class InventoryRepository extends BaseCouchbaseRepository<Inventory> {
 
     private JsonObject generateGetByCompanyIdParameters(String companyId) {
         return JsonObject.create().put("$companyId", companyId);
+    }
+
+    private String generateGetByNameQuery() {
+        return "SELECT `" + connectionManager.getBucket("inventory").name() + "`.* FROM `" + connectionManager.getBucket("inventory").name()
+                + "` where name = $name and companyId = $companyId";
+    }
+
+    private JsonObject generateGetByNameParameters(String companyId, String name) {
+        return JsonObject.create().put("$companyId", companyId).put("$name", name);
     }
 }

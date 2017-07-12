@@ -8,10 +8,11 @@ import com.ofs.server.security.SecurityContext;
 import com.ofs.server.security.Subject;
 import com.ofs.validations.InventoryCompanyIdValidation;
 import com.ofs.validations.InventoryGetValidation;
+import com.ofs.validations.InventoryUpdateValidation;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ValidateInventoryCustomerRole implements InventoryGetValidation, InventoryCompanyIdValidation {
+public class ValidateInventoryCustomerRole implements InventoryGetValidation, InventoryCompanyIdValidation, InventoryUpdateValidation {
     @Override
     public void validate(Inventory inventory, OFSErrors errors) throws Exception {
         Subject subject = SecurityContext.getSubject();

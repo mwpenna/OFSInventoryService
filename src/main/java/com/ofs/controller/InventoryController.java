@@ -151,7 +151,6 @@ public class InventoryController {
 
             OFSErrors ofsErrors = new OFSErrors();
             inventoryUpdateValidator.validate(inventory, ofsErrors);
-            inventoryCompanyValidation.validate(inventory.getCompanyId(), ofsErrors);
 
             if(changeSet.size()>0) {
                 inventoryRepository.updateInventory(inventory);
