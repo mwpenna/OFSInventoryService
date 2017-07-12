@@ -11,7 +11,6 @@ Feature: Inventory is deleted when inventory endpoint is called
     Given A ADMIN user exists and inventory item exists for a different company
     When A request is made to delete the inventory
     Then the response should have a status of 400
-    And I should see the inventory does not exists
 
   Scenario: Try to delete a inventory that exists by SYSTEM_ADMIN user
     Given A SYSTEM_ADMIN user exists and inventory item exists for a company

@@ -21,6 +21,7 @@ Given(/^A (.*?) user exists and inventory item exists for a company$/) do |role|
   sleep(0.1)
   result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
   @location = result.headers['location']
+  @inventoryId = @location.split("/id/").last
 
   jwtsubject = FactoryGirl.build(:jwtsubject, role: role, companyHref: 'http://localhost:8080/company/id/'+ @companyId)
   request = '{"status": 200, "message":'+ jwtsubject.to_json+'}'
@@ -50,6 +51,7 @@ Given(/^A (.*?) user exists and inventory item exists for a different company$/)
   sleep(0.1)
   result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
   @location = result.headers['location']
+  @inventoryId = @location.split("/id/").last
 
   @companyId = SecureRandom.uuid
   jwtsubject = FactoryGirl.build(:jwtsubject, role: role, companyHref: 'http://localhost:8080/company/id/'+ @companyId)
