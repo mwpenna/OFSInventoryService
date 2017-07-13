@@ -1,11 +1,13 @@
 When(/^A request to create an inventory item is received$/) do
   props = []
   @template.props.each do |property|
-    prop = FactoryGirl.build(:prop, name: property.name, value: "1234")
+    prop = FactoryGirl.build(:prop, name: property.name, required: property.required, type: property.type, value: "1234")
     props << prop
   end
   @inventory = FactoryGirl.build(:inventory, companyId: @companyId, props: props, type: @template.name)
+  sleep(1)
   @result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
+  sleep(1)
   @location = @result.headers['location']
 end
 
@@ -96,4 +98,27 @@ end
 
 And(/^I should see an inventory error message indicating invalid inventory type$/) do
   expect(@result["errors"][0]).to eql Errors.inventory_type_not_valid
+end
+
+And(/^I should see the inventory item was created$/) do
+  @result = @service_client.get_by_url_with_auth(@location, 'Bearer 123')
+
+  expect(@result["id"]).to_not be_nil
+  expect(@result["href"]).to_not be_nil
+  expect(@result["createdOn"]).to_not be_nil
+  expect(@result["type"]).to eql @inventory.type
+  expect(@result["companyId"]).to eql @inventory.companyId
+  expect(@result["price"]).to eql @inventory.price
+  expect(@result["quantity"]).to eql @inventory.quantity
+  expect(@result["name"]).to eql @inventory.name
+  expect(@result["description"]).to eql @inventory.description
+  expect(@result["props"]).to_not be_nil
+
+  @result["props"].each do |property|
+    prop = @inventory.props.detect{|u| u.name == property['name']}
+    expect(property["name"]).to eql prop.name
+    expect(property["required"]).to eql prop.required
+    expect(property["type"]).to eql prop.type
+    expect(property["value"]).to eql prop.value
+  end
 end

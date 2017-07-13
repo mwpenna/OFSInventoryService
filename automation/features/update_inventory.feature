@@ -83,45 +83,53 @@ Feature: Inventory is update when inventory endpoint is called
     Given A ADMIN user exists and inventory item exists for a company
     When A request to update invalid inventory field href is received
     Then the response should have a status of 400
+    And I should see an inventory error message with href not allowed
 
   Scenario: A request to update invalid inventory field createdOn is received
     Given A ADMIN user exists and inventory item exists for a company
     When A request to update invalid inventory field createdOn is received
     Then the response should have a status of 400
+    And I should see an inventory error message with createdOn not allowed
 
   Scenario: A request to update invalid inventory field id is received
     Given A ADMIN user exists and inventory item exists for a company
     When A request to update invalid inventory field id is received
     Then the response should have a status of 400
+    And I should see an inventory error message with id not allowed
 
   Scenario: A request to update invalid inventory field companyId is received
     Given A ADMIN user exists and inventory item exists for a company
     When A request to update invalid inventory field companyId is received
     Then the response should have a status of 400
+    And I should see an inventory error message with companyId not allowed
 
   Scenario: A request to update invalid inventory field type is received
     Given A ADMIN user exists and inventory item exists for a company
     When A request to update invalid inventory field type is received
     Then the response should have a status of 400
+    And I should see an inventory error message with type not allowed
 
   Scenario: A request to update an inventory item that does not exists
     When A request to update inventory that does not exists
     Then the response should have a status of 404
 
   Scenario: A request to update an inventory field name to a name that already exists for company
-    Given A ADMIN user exists and inventory item exists for a company
+    Given A ADMIN user exists and inventory exists for a company
     When A request to update inventory name to a name that already exists
     Then the response should have a status of 400
+    And I should see an inventory error message indicating name does not exists
 
   Scenario: A request to update an inventory with duplicate props
     Given A ADMIN user exists and inventory item exists for a company
     When A request to update inventory with duplicate props
     Then the response should have a status of 400
+    And I should see an inventory error message indicating duplicate props
 
   Scenario: A request to update an inventory props with missing required props
     Given A ADMIN user exists and inventory item exists for a company
     When A request to update inventory with missing required props
     Then the response should have a status of 400
+    And I should see an inventory error message indicating required prop missing
 
   Scenario: A request to update inventory by id is received by a ADMIN
     Given User authenticate service returns an exception
