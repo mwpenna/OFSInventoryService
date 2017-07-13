@@ -48,7 +48,7 @@ class Errors
   end
 
   def self.inventory_required_prop_missing
-    {"code"=>"inventory_required_prop_missing",
+    {"code"=>"inventory.required.prop.missing",
      "message"=>"Validation error. Missing required template property.",
      "developerMessage"=>"Validation error. Missing required template property."
     }
@@ -81,4 +81,9 @@ class Errors
    "properties"=>{"name"=>"color"}}
   end
 
+  def self.inventory_invalid_prop
+    {"code"=>"inventory.invalid.prop",
+     "message"=>"Validation error. Invalid property provided.",
+     "developerMessage"=>"Validation error. Invalid property provided."}
+  end
 end

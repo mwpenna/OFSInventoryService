@@ -66,6 +66,12 @@ When(/^A request to update an inventory is received$/) do
   @result = @service_client.post_to_url_with_auth("/inventory/id/"+SecureRandom.uuid, @inventory.update_to_json, "Bearer "+ "123")
 end
 
+When(/^A request to update inventory with prop that is not in the template is received$/) do
+  prop = FactoryGirl.build(:prop, name: Faker::Name.name, value: "1234")
+  @inventory.props <<  prop
+  @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, @inventory.update_to_json, "Bearer "+ "123")
+end
+
 Then(/^I should see the updated inventory item was returned$/) do
   @result = @service_client.get_by_url_with_auth(@location, 'Bearer 123')
 
@@ -95,4 +101,8 @@ end
 
 Then(/^I should see an inventory error message indicating duplicate props$/) do
   expect(@result["errors"][0]).to eql Errors.inventory_prop_duplicate_name
+end
+
+Then(/^I should see an inventory error message indicating invalid prop$/) do
+  expect(@result["errors"][0]).to eql Errors.inventory_invalid_prop
 end

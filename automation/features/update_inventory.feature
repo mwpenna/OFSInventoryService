@@ -140,3 +140,9 @@ Feature: Inventory is update when inventory endpoint is called
     Given A ADMIN user does not exists for a company
     When A request to update an inventory is received
     Then the response should have a status of 403
+
+  Scenario: A request to update inventory props with a prop that is not in the template is received by an admin
+    Given A ADMIN user exists and inventory item exists for a company
+    When A request to update inventory with prop that is not in the template is received
+    Then the response should have a status of 400
+    And I should see an inventory error message indicating invalid prop

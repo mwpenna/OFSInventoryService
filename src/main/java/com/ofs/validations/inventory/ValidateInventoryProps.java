@@ -34,9 +34,17 @@ public class ValidateInventoryProps implements InventoryCreateValidation, Invent
                 }
                 else {
                     if(prop.isRequired()) {
-                        errors.rejectValue("inventory_required_prop_missing", "Validation error. Missing required template property.");
+                        errors.rejectValue("inventory.required.prop.missing", "Validation error. Missing required template property.");
 
                     }
+                }
+            });
+
+            inventory.getProps().forEach(prop -> {
+                Optional<Props> propsOptional = template.getProps().stream().filter(templateProp -> templateProp.getName().equalsIgnoreCase(prop.getName())).findFirst();
+
+                if(!propsOptional.isPresent()) {
+                    errors.rejectValue("inventory.invalid.prop", "Validation error. Invalid property provided.");
                 }
             });
         }

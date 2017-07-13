@@ -28,7 +28,7 @@ Given(/^A ADMIN user and template exists for a company$/) do
 end
 
 When(/^A request to create a duplicate template name is received$/) do
-  sleep(1)
+  sleep(0.1)
   prop1 = FactoryGirl.build(:prop, name: 'field', required: true, type:'STRING')
   prop2 = FactoryGirl.build(:prop, name: 'numberField', required: true, type:'NUMBER')
   template = FactoryGirl.build(:template, name: @template.name, props: [prop1, prop2])
