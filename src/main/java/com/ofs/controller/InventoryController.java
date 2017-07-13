@@ -150,7 +150,7 @@ public class InventoryController {
             ChangeSet changeSet = form.update(inventory);
 
             OFSErrors ofsErrors = new OFSErrors();
-            inventoryUpdateValidator.validate(inventory, ofsErrors);
+            inventoryUpdateValidator.validate(changeSet, inventory, ofsErrors);
 
             if(changeSet.size()>0) {
                 inventoryRepository.updateInventory(inventory);

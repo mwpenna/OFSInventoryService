@@ -32,6 +32,8 @@ public class ValidateInventoryNameDNE implements InventoryUpdateValidation {
 
     @Override
     public void validate(ChangeSet changeSet, Inventory inventory, OFSErrors errors) throws Exception {
-        validate(inventory, errors);
+        if(changeSet.contains("name")) {
+            validate(inventory, errors);
+        }
     }
 }

@@ -54,4 +54,28 @@ class Inventory
     }
   end
 
+  def update_to_json
+    {
+        price: self.price,
+        quantity: self.quantity,
+        name: self.name,
+        description: self.description,
+        props: props.map do |prop|
+          prop.inventory_create_hash
+        end
+    }.to_json
+  end
+
+  def update_hash
+    {
+        price: self.price,
+        quantity: self.quantity,
+        name: self.name,
+        description: self.description,
+        props: props.map do |prop|
+          prop.inventory_create_hash
+        end
+    }
+  end
+
 end
