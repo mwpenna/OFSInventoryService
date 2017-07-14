@@ -4,6 +4,7 @@ import com.ofs.model.Inventory;
 import com.ofs.repository.InventoryRepository;
 import com.ofs.server.form.update.ChangeSet;
 import com.ofs.server.model.OFSErrors;
+import com.ofs.validations.InventoryCreateValidation;
 import com.ofs.validations.InventoryUpdateValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class ValidateInventoryNameDNE implements InventoryUpdateValidation {
+public class ValidateInventoryNameDNE implements InventoryUpdateValidation, InventoryCreateValidation {
 
     @Autowired
     private InventoryRepository inventoryRepository;

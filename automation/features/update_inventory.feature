@@ -117,7 +117,7 @@ Feature: Inventory is update when inventory endpoint is called
     Given A ADMIN user exists and inventory exists for a company
     When A request to update inventory name to a name that already exists
     Then the response should have a status of 400
-    And I should see an inventory error message indicating name does not exists
+    And I should see an inventory error message indicating name exists
 
   Scenario: A request to update an inventory with duplicate props
     Given A ADMIN user exists and inventory item exists for a company

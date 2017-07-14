@@ -95,7 +95,7 @@ Then(/^I should see the updated inventory item was returned$/) do
   end
 end
 
-And(/^I should see an inventory error message indicating name does not exists$/) do
+And(/^I should see an inventory error message indicating name exists$/) do
   expect(@result["errors"][0]).to eql Errors.inventory_name_exists
 end
 

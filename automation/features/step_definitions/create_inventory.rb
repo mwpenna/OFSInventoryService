@@ -91,6 +91,34 @@ When(/^A request to create inventory with prop that is not in the template is re
   @location = @result.headers['location']
 end
 
+When(/^A request to create inventory with duplicate prop name is received$/) do
+  props = []
+  @template.props.each do |property|
+    prop = FactoryGirl.build(:prop, name: property.name, required: property.required, type: property.type, value: "1234")
+    props << prop
+    props << prop
+  end
+
+  @inventory = FactoryGirl.build(:inventory, companyId: @companyId, props: props, type: @template.name)
+  sleep(0.1)
+  @result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
+  sleep(0.1)
+  @location = @result.headers['location']
+end
+
+When(/^A request to create inventory item with duplicate name is received$/) do
+  props = []
+  @template.props.each do |property|
+    prop = FactoryGirl.build(:prop, name: property.name, required: property.required, type: property.type, value: "1234")
+    props << prop
+  end
+  @inventory = FactoryGirl.build(:inventory, name: @inventory.name, companyId: @companyId, props: props, type: @template.name)
+  sleep(0.1)
+  @result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
+  sleep(0.1)
+  @location = @result.headers['location']
+end
+
 And(/^I should see an inventory error message with (.*?) not allowed/) do |property|
   expect(@result["errors"][0]).to eql Errors.inventory_field_not_acceptable(property)
 end
