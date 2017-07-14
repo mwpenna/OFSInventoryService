@@ -100,6 +100,12 @@ Feature: Inventory is created when inventory endpoint is called
     Then the response should have a status of 400
     And I should see an inventory error message indicating prop type invalid
 
+  Scenario: A request to create an inventory item is received with invalid prop field defaultValue
+    Given A ADMIN user exists and template exists for a company
+    When A request to create an inventory item is received with invalid prop defaultValue
+    Then the response should have a status of 400
+    And I should see an inventory error message indicating prop defaultValue invalid
+
   Scenario: A request to create an inventory item is received with an inventory type that does not match a company's template
     Given A ADMIN user exists and template exists for a company
     When A request to create an inventory item is received with an invalid inventory type

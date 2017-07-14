@@ -13,6 +13,7 @@ public class Props {
         this.type = type != null ? Type.valueOf(type) : null;
         this.required = (Boolean) propMap.get("required");
         this.value = (String) propMap.get("value");
+        this.defaultValue = (String) propMap.get("defaultValue");
     }
 
     public Props() {
@@ -29,4 +30,5 @@ public class Props {
     private Type type;
     private boolean required;
     private String value;
+    private String defaultValue;
 }

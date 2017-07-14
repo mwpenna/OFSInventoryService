@@ -47,6 +47,9 @@
           },
           "value" : {
             "type" : "string"
+          },
+          "defaultValue" : {
+            "not": {}
           }
         },
         "additionalProperties": false,

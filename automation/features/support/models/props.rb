@@ -1,6 +1,6 @@
 class Prop
 
-  attr_accessor :name, :type, :required, :value
+  attr_accessor :name, :type, :required, :value, :defaultValue
 
   def create_to_json
     create_hash.to_json
@@ -18,6 +18,16 @@ class Prop
     {
         name: self.name,
         value: self.value
+    }
+  end
+
+  def to_hash
+    {
+        name: self.name,
+        type: self.type,
+        required: self.required,
+        value: self.value,
+        defaultValue: self.defaultValue
     }
   end
 

@@ -146,3 +146,21 @@ Feature: Inventory is update when inventory endpoint is called
     When A request to update inventory with prop that is not in the template is received
     Then the response should have a status of 400
     And I should see an inventory error message indicating invalid prop
+
+  Scenario: A request to update an inventory invalid prop field type
+    Given A ADMIN user exists and inventory item exists for a company
+    When A request to update an inventorys props field type is received
+    Then the response should have a status of 400
+    And I should see an inventory error message indicating prop type invalid
+
+  Scenario: A request to update an inventory invalid prop field required
+    Given A ADMIN user exists and inventory item exists for a company
+    When A request to update an inventorys props field required is received
+    Then the response should have a status of 400
+    And I should see an inventory error message indicating prop required invalid
+
+  Scenario: A request to update an inventory invalid prop field defaultValue
+    Given A ADMIN user exists and inventory item exists for a company
+    When A request to update an inventorys props field defaultValue is received
+    Then the response should have a status of 400
+    And I should see an inventory error message indicating prop defaultValue invalid

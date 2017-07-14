@@ -30,6 +30,14 @@ When(/^A request to update an inventorys props is received$/) do
   @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, @inventory.update_to_json, "Bearer "+ "123")
 end
 
+When(/^A request to update an inventorys props field (.*?) is received$/) do |field|
+  body = @inventory.update_hash
+  body[:props].each do |prop|
+    prop[field.to_sym]='test'
+  end
+  @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, body.to_json, "Bearer "+ "123")
+end
+
 When(/^A request to update invalid inventory field (.*?) is received$/) do |field|
   body = @inventory.update_hash
   body[field.to_sym]="test"
