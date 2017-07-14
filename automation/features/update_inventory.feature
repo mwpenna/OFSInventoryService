@@ -123,7 +123,7 @@ Feature: Inventory is update when inventory endpoint is called
     Given A ADMIN user exists and inventory item exists for a company
     When A request to update inventory with duplicate props
     Then the response should have a status of 400
-    And I should see an inventory error message indicating duplicate props
+    And I should see an error message indicating duplicate props
 
   Scenario: A request to update an inventory props with missing required props
     Given A ADMIN user exists and inventory item exists for a company

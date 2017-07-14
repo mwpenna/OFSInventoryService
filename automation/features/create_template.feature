@@ -108,3 +108,9 @@ Feature: Template is created when template endpoint is called
     When A request to create a template is received with a companyId
     Then the response should have a status of 201
     And I should see the companyId is equal to the requested companyId
+
+  Scenario: A request to create template with duplicate prop name
+    Given A ADMIN user exists and template exists for a company
+    When A request to create template with duplicate prop name is received
+    Then the response should have a status of 400
+    And I should see an error message indicating duplicate props

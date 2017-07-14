@@ -83,6 +83,15 @@ When(/^A request to create a template is received with a companyId$/) do
   @location = @result.headers['location']
 end
 
+When(/^A request to create template with duplicate prop name is received$/) do
+  prop1 = FactoryGirl.build(:prop, name: 'color', required: true, type:'STRING')
+  prop2 = FactoryGirl.build(:prop, name: 'size', required: true, type:'NUMBER')
+  prop3 = FactoryGirl.build(:prop, name: 'color', required: true, type:'STRING')
+  @template = FactoryGirl.build(:template, name: Faker::Name.name , props: [prop1, prop2, prop3])
+  @result = @service_client.post_to_url_with_auth("/inventory/template", @template.create_to_json, "Bearer "+ "123")
+  @location = @result.headers['location']
+end
+
 Then(/^the response should have a status of (\d+)$/) do |response_code|
   expect(@result.response.code.to_i).to eql response_code.to_i
 end

@@ -99,8 +99,8 @@ And(/^I should see an inventory error message indicating name exists$/) do
   expect(@result["errors"][0]).to eql Errors.inventory_name_exists
 end
 
-Then(/^I should see an inventory error message indicating duplicate props$/) do
-  expect(@result["errors"][0]).to eql Errors.inventory_prop_duplicate_name
+Then(/^I should see an error message indicating duplicate props$/) do
+  expect(@result["errors"][0]).to eql Errors.prop_duplicate_name
 end
 
 Then(/^I should see an inventory error message indicating invalid prop$/) do

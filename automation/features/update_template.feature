@@ -79,3 +79,9 @@ Feature: Template is update when template endpoint is called
     When A request to update a template companyId is received
     Then the response should have a status of 400
     And I should see an error message with companyId not allowed
+
+  Scenario: A request to update a template with duplicate props
+    Given A ADMIN user exists and template exists for a company
+    When A request to update a template with duplicate props
+    Then the response should have a status of 400
+    And I should see an error message indicating duplicate props

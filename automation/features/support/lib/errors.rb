@@ -74,8 +74,8 @@ class Errors
      "developerMessage"=>"Invalid inventory name. Inventory item already exists with that name."}
   end
 
-  def self.inventory_prop_duplicate_name
-  {"code"=>"inventory.props.name.duplicate",
+  def self.prop_duplicate_name
+  {"code"=>"props.name.duplicate",
    "message"=>"Invalid prop with name: color. Prop list contained multiple prop elements with the same name.",
    "developerMessage"=>"Invalid prop with name: {name}. Prop list contained multiple prop elements with the same name.",
    "properties"=>{"name"=>"color"}}
