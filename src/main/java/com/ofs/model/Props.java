@@ -1,5 +1,6 @@
 package com.ofs.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.Map;
@@ -24,6 +25,11 @@ public class Props {
         NUMBER,
         STRING,
         BOOLEAN
+    }
+
+    @JsonIgnore
+    public Props getProp() {
+        return this;
     }
 
     private String name;

@@ -37,6 +37,12 @@
           },
           "required": {
             "type": "boolean"
+          },
+          "value" : {
+            "not" : {}
+          },
+          "defaultValue" : {
+            "type": "string"
           }
         },
         "additionalProperties": false,

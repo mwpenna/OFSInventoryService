@@ -78,6 +78,22 @@ public class InventoryRepository extends BaseCouchbaseRepository<Inventory> {
         }
     }
 
+    public Optional<List<Inventory>> getInventoryByType(String companyId, String type) throws Exception {
+        try{
+            ParameterizedN1qlQuery query = ParameterizedN1qlQuery.parameterized(
+                    generateGetByTypeQuery(), generateGetByTypeParameters(companyId, type));
+            return queryForObjectListByParameters(query, connectionManager.getBucket("inventory"), Inventory.class);
+        }
+        catch (NoSuchElementException e) {
+            log.info("No results returned for getInventoryByType with type: {}", type);
+            return Optional.empty();
+        }
+        catch (TemporaryFailureException e) {
+            log.error("Temporary Failure with couchbase occurred" , e);
+            throw new ServiceUnavailableException();
+        }
+    }
+
     public void deleteTemplateById(String id) {
         Objects.requireNonNull(id);
 
@@ -130,5 +146,14 @@ public class InventoryRepository extends BaseCouchbaseRepository<Inventory> {
 
     private JsonObject generateGetByNameParameters(String companyId, String name) {
         return JsonObject.create().put("$companyId", companyId).put("$name", name);
+    }
+
+    private String generateGetByTypeQuery() {
+        return "SELECT `" + connectionManager.getBucket("inventory").name() + "`.* FROM `" + connectionManager.getBucket("inventory").name()
+                + "` where type = $type and companyId = $companyId";
+    }
+
+    private JsonObject generateGetByTypeParameters(String companyId, String type) {
+        return JsonObject.create().put("$companyId", companyId).put("$type", type);
     }
 }
