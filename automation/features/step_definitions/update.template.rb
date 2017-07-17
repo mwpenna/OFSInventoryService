@@ -40,8 +40,8 @@ When(/^A request to update a template name is received$/) do
 end
 
 When(/^A request to update a template props is received$/) do
-  prop1 = FactoryGirl.build(:prop, name: Faker::Name.name, required: true, type:'STRING')
-  prop2 = FactoryGirl.build(:prop, name: Faker::Name.name, required: true, type:'NUMBER')
+  prop1 = FactoryGirl.build(:prop, name: Faker::Name.name, required: false, type:'STRING')
+  prop2 = FactoryGirl.build(:prop, name: Faker::Name.name, required: false, type:'NUMBER')
   @template.props = [prop1, prop2]
   @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_props_to_json, "Bearer "+ "123")
 end
@@ -66,9 +66,9 @@ When(/^A request to update a template companyId is received$/) do
 end
 
 When(/^A request to update a template with duplicate props$/) do
-  prop1 = FactoryGirl.build(:prop, name: 'color', required: true, type:'STRING')
-  prop2 = FactoryGirl.build(:prop, name: Faker::Name.name, required: true, type:'NUMBER')
-  prop3 = FactoryGirl.build(:prop, name: 'color', required: true, type:'STRING')
+  prop1 = FactoryGirl.build(:prop, name: 'color', required: false, type:'STRING')
+  prop2 = FactoryGirl.build(:prop, name: Faker::Name.name, required: false, type:'NUMBER')
+  prop3 = FactoryGirl.build(:prop, name: 'color', required: false, type:'STRING')
   @template.props = [prop1, prop2, prop3]
   @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_props_to_json, "Bearer "+ "123")
 end
@@ -112,6 +112,7 @@ When(/^A request is made to update a templates props$/) do
   @newProp = FactoryGirl.build(:prop, name: Faker::Name.name, required: true, type: 'STRING', defaultValue: "VALIDDEFAULTVALUE")
   @template.props << @newProp
   @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_props_to_json, "Bearer "+ "123")
+  sleep(0.1)
 end
 
 Then(/^I should see the template was updated$/) do

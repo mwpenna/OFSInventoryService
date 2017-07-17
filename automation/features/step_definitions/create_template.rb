@@ -92,6 +92,22 @@ When(/^A request to create template with duplicate prop name is received$/) do
   @location = @result.headers['location']
 end
 
+When(/^A request to create a template is received without defaultValue$/) do
+  prop1 = FactoryGirl.build(:prop, name: 'color', required: true, type:'STRING')
+  prop2 = FactoryGirl.build(:prop, name: 'size', required: true, type:'NUMBER')
+  @template = FactoryGirl.build(:template, name: Faker::Name.name , props: [prop1, prop2])
+  @result = @service_client.post_to_url_with_auth("/inventory/template", @template.create_to_json, "Bearer "+ "123")
+  @location = @result.headers['location']
+end
+
+When(/^A request to create a template is received with defaultValue$/) do
+  prop1 = FactoryGirl.build(:prop, name: 'color', required: true, type:'STRING', defaultValue:'defaultValue')
+  prop2 = FactoryGirl.build(:prop, name: 'size', required: true, type:'NUMBER', defaultValue:'1234')
+  @template = FactoryGirl.build(:template, name: Faker::Name.name , props: [prop1, prop2])
+  @result = @service_client.post_to_url_with_auth("/inventory/template", @template.create_to_json, "Bearer "+ "123")
+  @location = @result.headers['location']
+end
+
 Then(/^the response should have a status of (\d+)$/) do |response_code|
   expect(@result.response.code.to_i).to eql response_code.to_i
 end
@@ -127,6 +143,7 @@ Then(/^I should the template was created$/) do
     expect(prop.name).to eql prop.name
     expect(prop.required).to eql prop.required
     expect(prop.type).to eql prop.type
+    expect(prop.defaultValue).to eql prop.defaultValue
   end
 end
 
