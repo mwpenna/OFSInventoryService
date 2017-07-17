@@ -88,17 +88,47 @@ Feature: Template is update when template endpoint is called
 
 
   Scenario: A request to update a template with new props required field and default value is missing
+    Given A ADMIN user exists and template exists for a company
+    When A request is made to update a template props with new required field and defaultValue is missing
+    Then the response should have a status of 400
 
   Scenario: A request to update a template with new props with no required fields and default value is missing
+    Given A ADMIN user exists and template exists for a company
+    When A request is made to update a template props with no required field and defaultValue is missing
+    Then the response should have a status of 204
+    And I should see the template was updated
 
   Scenario: A request to update a template with invalid defaultValue type
+    Given A ADMIN user exists and template exists for a company
+    When A request is made to update a template props with invalid defaultValue type
+    Then the response should have a status of 400
 
   Scenario: A request to update a template with valid defaultValue type
+    Given A ADMIN user exists and template exists for a company
+    When A request is made to update a template props with valid defaultValue type
+    Then the response should have a status of 204
+    And I should see the template was updated
 
   Scenario: A request to update a template with no new props
+    Given A ADMIN user exists and template exists for a company
+    When A request is made to update a template with no new props
+    Then the response should have a status of 204
+    And I should see the template was updated
 
   Scenario: A request to update a template with new props should update inventory props that use template
+    Given A company exists with an ADMIN user, template, and inventory for that template
+    When A request is made to update a templates props
+    Then the response should have a status of 204
+    And I should see inventory for that template was updated with new props
 
   Scenario: A request to update a template with new props when inventory does not exists for that company
+    Given A ADMIN user exists and template exists for a company
+    When A request is made to update a template props
+    Then the response should have a status of 204
+    And I should see the template was updated
 
   Scenario: A request to update a template with new props when no inventory uses template
+    Given A company exists with an ADMIN user, template, and inventory not for that template
+    When A request is made to update a templates props
+    Then the response should have a status of 204
+    And I should see inventory for that template was not updated with new props
