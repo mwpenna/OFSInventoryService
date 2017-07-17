@@ -114,3 +114,8 @@ Feature: Template is created when template endpoint is called
     When A request to create template with duplicate prop name is received
     Then the response should have a status of 400
     And I should see an error message indicating duplicate props
+
+
+  Scenario: A request to create a new template without defaultValue
+
+  Scenario: A request to create a new template with defaultValue

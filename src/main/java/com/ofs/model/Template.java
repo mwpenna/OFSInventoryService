@@ -53,6 +53,9 @@ public class Template implements OFSEntity{
     private String companyId;
 
     @JsonIgnore
+    private List<Props> previousProps;
+
+    @JsonIgnore
     public String getIdFromHref() {
         return StringUtils.getIdFromURI(getHref());
     }

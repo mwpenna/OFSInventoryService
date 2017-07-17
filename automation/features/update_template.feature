@@ -85,3 +85,20 @@ Feature: Template is update when template endpoint is called
     When A request to update a template with duplicate props
     Then the response should have a status of 400
     And I should see an error message indicating duplicate props
+
+
+  Scenario: A request to update a template with new props required field and default value is missing
+
+  Scenario: A request to update a template with new props with no required fields and default value is missing
+
+  Scenario: A request to update a template with invalid defaultValue type
+
+  Scenario: A request to update a template with valid defaultValue type
+
+  Scenario: A request to update a template with no new props
+
+  Scenario: A request to update a template with new props should update inventory props that use template
+
+  Scenario: A request to update a template with new props when inventory does not exists for that company
+
+  Scenario: A request to update a template with new props when no inventory uses template

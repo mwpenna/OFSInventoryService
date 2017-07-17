@@ -136,6 +136,7 @@ public class TemplateController {
 
         if(templateOptional.isPresent()) {
             Template template = templateOptional.get();
+            template.setPreviousProps(template.getProps());
 
             ChangeSet changeSet = form.update(template);
 

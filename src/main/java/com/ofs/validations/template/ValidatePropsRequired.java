@@ -1,5 +1,6 @@
 package com.ofs.validations.template;
 
+import com.ofs.model.Props;
 import com.ofs.model.Template;
 import com.ofs.server.errors.ServerException;
 import com.ofs.server.form.update.ChangeSet;
@@ -12,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Slf4j
 public class ValidatePropsRequired implements TemplateUpdateValidation {
     @Autowired
@@ -22,37 +26,55 @@ public class ValidatePropsRequired implements TemplateUpdateValidation {
 
     @Override
     public void validate(Template template, OFSErrors errors) throws Exception {
-        template.getProps().forEach(props -> {
-            if(props.isRequired()) {
-                if(props.getDefaultValue().isEmpty()) {
-                    OFSError error = errors.rejectValue("template.props.default_value.required_field_missing", "Validation error. Cannot update template with required prop {name} without providing default value.");
-                    error.put("name", props.getName());
-                }
-                else {
-                    try {
-                        validatePropValue.validate(props, errors);
-                    } catch (Exception e) {
-                        log.error("Unhandled exception occurred");
-                        throw new ServerException(HttpStatus.INTERNAL_SERVER_ERROR);
-                    }
+        Map<String, Props> previousPropMap = template.getPreviousProps().stream().collect(Collectors.toMap(Props::getName, Props::getProp));
 
-                    if(errors.isEmpty()) {
-                        try {
-                            inventoryService.updateInventoryProps(template);
-                        } catch (Exception e) {
-                            log.error("Unhandled exception occurred when trying to update inventory props", e);
-                            throw new ServerException(HttpStatus.INTERNAL_SERVER_ERROR);
-                        }
-                    }
+        template.getProps().forEach(props -> {
+            if(isNewProp(props, previousPropMap)) {
+                if(!isDefaultValueMissing(props, errors)) {
+                    validatePropValue(props, errors);
                 }
             }
         });
+
+        updateInventoryProps(template, errors);
+    }
+
+    private boolean isNewProp(Props props, Map<String, Props> previousPropMap) {
+        return props.isRequired() && !previousPropMap.containsKey(props.getName());
+    }
+
+    private boolean isDefaultValueMissing(Props props, OFSErrors errors) {
+        if(props.getDefaultValue().isEmpty()) {
+            OFSError error = errors.rejectValue("template.props.default_value.required_field_missing", "Validation error. Cannot update template with required prop {name} without providing default value.");
+            error.put("name", props.getName());
+            return true;
+        }
+
+        return false;
+    }
+
+    private void validatePropValue(Props props, OFSErrors errors) {
+        try {
+            validatePropValue.validate(props, errors);
+        } catch (Exception e) {
+            log.error("Unhandled exception occurred");
+            throw new ServerException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private void updateInventoryProps(Template template, OFSErrors errors) {
+        if(errors.isEmpty()) {
+            try {
+                inventoryService.updateInventoryProps(template);
+            } catch (Exception e) {
+                log.error("Unhandled exception occurred when trying to update inventory props", e);
+                throw new ServerException(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
     }
 
     @Override
     public void validate(ChangeSet changeSet, Template template, OFSErrors errors) throws Exception {
-        if(changeSet.contains("props")) {
-            validate(template, errors);
-        }
+        if(changeSet.contains("props")) validate(template, errors);
     }
 }
