@@ -137,4 +137,4 @@ Feature: Template is update when template endpoint is called
     Given A company exists with an ADMIN user, template, and inventory not for that template
     When A request is made to update a templates props
     Then the response should have a status of 204
-    And I should see inventory for that template was not updated with new props
+    And I should see inventory was not updated with new props

@@ -8,7 +8,7 @@ class Template
   def generate_and_create_template(args={})
     prop1 = FactoryGirl.build(:prop, name: 'color', required: true, type:'STRING')
     prop2 = FactoryGirl.build(:prop, name: 'size', required: true, type:'NUMBER')
-    @props = [prop1, prop2]
+    @props = args[:props] || [prop1, prop2]
     @name = Faker::Name.name
 
     service_client = ServiceClient.new

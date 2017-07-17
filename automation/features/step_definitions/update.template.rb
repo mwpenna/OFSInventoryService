@@ -5,6 +5,23 @@ Given(/^A ADMIN user exists and template does not exists$/) do
   @service_client.post_to_url(@service_client.get_mock_base_uri + '/users/authenticate/status', request)
 end
 
+Given(/^A company exists with an ADMIN user, template, and inventory not for that template$/) do
+  @companyId = SecureRandom.uuid
+  JWTSubject.new().generate_and_create_jwt_subject({role: 'ADMIN', companyId: @companyId})
+  @template = Template.new().generate_and_create_template({companyId: @companyId})
+  sleep(0.1)
+
+  @inventory = Inventory.new().generate_and_create_inventory({template: @template, companyId: @companyId,
+                                                              createProps: true, name: Faker::Name.name});
+  sleep(0.1)
+  prop1 = FactoryGirl.build(:prop, name: 'stringValue', required: true, type:'STRING')
+  prop2 = FactoryGirl.build(:prop, name: 'numberValue', required: true, type:'NUMBER')
+  props = [prop1, prop2]
+  @template = Template.new().generate_and_create_template({companyId: @companyId, props: props})
+  sleep(0.1)
+  JWTSubject.new().generate_and_create_jwt_subject({role: 'ADMIN', companyId: @companyId})
+end
+
 When(/^A request to update a template is received$/) do
   @template ||= FactoryGirl.build(:template, name: Faker::Name.name)
   @template.id ||= SecureRandom.uuid
@@ -157,4 +174,20 @@ And(/^I should see inventory for that template was updated with new props$/) do
   expect(prop["type"]).to eql @newProp.type
   expect(prop["value"]).to eql @newProp.defaultValue
   expect(prop["defaultValue"]).to eql nil
+end
+
+And(/^I should see inventory was not updated with new props$/) do
+  @result = @service_client.get_by_url_with_auth(@inventory.href, 'Bearer 123')
+
+  @inventory.props.each do |property|
+    prop = @result["props"].detect{|u| u["name"] == property.name}
+    expect(prop["name"]).to eql property.name
+    expect(prop["required"]).to eql property.required
+    expect(prop["type"]).to eql property.type
+    expect(prop["value"]).to eql property.value
+    expect(prop["defaultValue"]).to eql nil
+  end
+
+  prop = @result["props"].detect{|u| u["name"] == @newProp.name}
+  expect(prop).to eql nil
 end
