@@ -122,7 +122,7 @@ Feature: Template is update when template endpoint is called
     And I should see the template was updated
 
   Scenario: A request to update a template with new props should update inventory props that use template
-    Given A company exists with an ADMIN user, template, and inventory for that template
+    Given A ADMIN user exists and inventory item exists for a company
     When A request is made to update a templates props
     Then the response should have a status of 204
     And I should see inventory for that template was updated with new props

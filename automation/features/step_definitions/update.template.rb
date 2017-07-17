@@ -85,6 +85,18 @@ When(/^A request is made to update a template with no new props$/) do
   @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_name_to_json, "Bearer "+ "123")
 end
 
+When(/^A request is made to update a template props$/) do
+  @newProp = FactoryGirl.build(:prop, name: Faker::Name.name, required: true, type: 'STRING', defaultValue: "VALIDDEFAULTVALUE")
+  @template.props << @newProp
+  @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_props_to_json, "Bearer "+ "123")
+end
+
+When(/^A request is made to update a templates props$/) do
+  @newProp = FactoryGirl.build(:prop, name: Faker::Name.name, required: true, type: 'STRING', defaultValue: "VALIDDEFAULTVALUE")
+  @template.props << @newProp
+  @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_props_to_json, "Bearer "+ "123")
+end
+
 Then(/^I should see the template was updated$/) do
   result = @service_client.get_by_url_with_auth(@service_client.get_base_uri + "/inventory/template/id/" + @template.id, 'Bearer 123')
 
@@ -125,4 +137,24 @@ end
 
 And(/^I should see an error message indicating invalid prop value$/) do
   expect(@result["errors"][0]).to eql Errors.prop_invalid_value(@newProp.defaultValue, @newProp.type)
+end
+
+And(/^I should see inventory for that template was updated with new props$/) do
+  @result = @service_client.get_by_url_with_auth(@location, 'Bearer 123')
+
+  @inventory.props.each do |property|
+    prop = @result["props"].detect{|u| u["name"] == property.name}
+    expect(prop["name"]).to eql property.name
+    expect(prop["required"]).to eql property.required
+    expect(prop["type"]).to eql property.type
+    expect(prop["value"]).to eql property.value
+    expect(prop["defaultValue"]).to eql nil
+  end
+
+  prop = @result["props"].detect{|u| u["name"] == @newProp.name}
+  expect(prop["name"]).to eql @newProp.name
+  expect(prop["required"]).to eql @newProp.required
+  expect(prop["type"]).to eql @newProp.type
+  expect(prop["value"]).to eql @newProp.defaultValue
+  expect(prop["defaultValue"]).to eql nil
 end

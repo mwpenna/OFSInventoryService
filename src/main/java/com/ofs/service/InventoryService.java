@@ -41,8 +41,11 @@ public class InventoryService {
 
         getRequiredProps(template.getProps()).forEach(props -> {
             if(!propMap.containsKey(props.getName())) {
-                props.setValue(props.getDefaultValue());
-                inventory.getProps().add(props);
+
+                Props propCopy = props;
+                propCopy.setValue(props.getDefaultValue());
+                propCopy.setDefaultValue(null);
+                inventory.getProps().add(propCopy);
             }
         });
     }
