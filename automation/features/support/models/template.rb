@@ -67,7 +67,7 @@ class Template
   def update_props_to_json
     {
         props: props.map do |prop|
-          prop.create_hash
+          prop.update_hash
         end
     }.to_json
   end

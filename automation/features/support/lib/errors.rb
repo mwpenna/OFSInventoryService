@@ -23,6 +23,20 @@ class Errors
      "properties" => {"field" => "props.items.#{field}"}}
   end
 
+  def self.props_missing_default_value(name)
+    {"code"=>"template.props.default_value.required_field_missing",
+     "message"=>"Validation error. Cannot update template with required prop #{name} without providing default value.",
+     "developerMessage"=>"Validation error. Cannot update template with required prop {name} without providing default value.",
+     "properties"=>{"name"=>"#{name}"}}
+  end
+
+  def self.prop_invalid_value(value, type)
+    {"code"=>"prop.invalid_value",
+     "message"=>"Validation exception. Invalid prop value: #{value} for type: #{type}.",
+     "developerMessage"=>"Validation exception. Invalid prop value: {value} for type: {type}.",
+     "properties"=>{"value"=>"#{value}", "type"=>"#{type}"}}
+  end
+
   def self.inventory_required_field_missing(field)
     {"code" => "inventory.#{field.underscore}.required_field_missing",
      "property" => field,

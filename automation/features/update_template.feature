@@ -86,11 +86,11 @@ Feature: Template is update when template endpoint is called
     Then the response should have a status of 400
     And I should see an error message indicating duplicate props
 
-
   Scenario: A request to update a template with new props required field and default value is missing
     Given A ADMIN user exists and template exists for a company
     When A request is made to update a template props with new required field and defaultValue is missing
     Then the response should have a status of 400
+    And I should see an error message indicating default value missing
 
   Scenario: A request to update a template with new props with no required fields and default value is missing
     Given A ADMIN user exists and template exists for a company
@@ -100,7 +100,13 @@ Feature: Template is update when template endpoint is called
 
   Scenario: A request to update a template with invalid defaultValue type
     Given A ADMIN user exists and template exists for a company
-    When A request is made to update a template props with invalid defaultValue type
+    When A request is made to update a template props with invalid NUMBER defaultValue
+    Then the response should have a status of 400
+    And I should see an error message indicating invalid prop value
+
+  Scenario: A request to update a template with invalid defaultValue type
+    Given A ADMIN user exists and template exists for a company
+    When A request is made to update a template props with invalid BOOLEAN defaultValue
     Then the response should have a status of 400
 
   Scenario: A request to update a template with valid defaultValue type

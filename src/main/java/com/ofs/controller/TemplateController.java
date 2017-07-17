@@ -141,7 +141,7 @@ public class TemplateController {
             ChangeSet changeSet = form.update(template);
 
             OFSErrors ofsErrors = new OFSErrors();
-            templateUpdateValidator.validate(template, ofsErrors);
+            templateUpdateValidator.validate(changeSet, template, ofsErrors);
 
             if(changeSet.size()>0) {
                 templateRepository.updateTemplate(template);

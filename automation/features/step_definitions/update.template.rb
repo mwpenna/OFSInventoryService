@@ -56,6 +56,35 @@ When(/^A request to update a template with duplicate props$/) do
   @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_props_to_json, "Bearer "+ "123")
 end
 
+When(/^A request is made to update a template props with new required field and defaultValue is missing$/) do
+  @newProp = FactoryGirl.build(:prop, name: Faker::Name.name, required: true, type:'STRING')
+  @template.props << @newProp
+  @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_props_to_json, "Bearer "+ "123")
+end
+
+When(/^A request is made to update a template props with no required field and defaultValue is missing$/) do
+  @newProp = FactoryGirl.build(:prop, name: Faker::Name.name, required: false, type:'STRING')
+  @template.props << @newProp
+  @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_props_to_json, "Bearer "+ "123")
+end
+
+When(/^A request is made to update a template props with invalid (.*?) defaultValue$/) do |type|
+  @newProp = FactoryGirl.build(:prop, name: Faker::Name.name, required: true, type: type, defaultValue: "INVALIDNUMBER")
+  @template.props << @newProp
+  @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_props_to_json, "Bearer "+ "123")
+end
+
+When(/^A request is made to update a template props with valid defaultValue type$/) do
+  @newProp = FactoryGirl.build(:prop, name: Faker::Name.name, required: true, type: 'STRING', defaultValue: "VALIDDEFAULTVALUE")
+  @template.props << @newProp
+  @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_props_to_json, "Bearer "+ "123")
+end
+
+When(/^A request is made to update a template with no new props$/) do
+  @template.name = Faker::Name.name
+  @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_name_to_json, "Bearer "+ "123")
+end
+
 Then(/^I should see the template was updated$/) do
   result = @service_client.get_by_url_with_auth(@service_client.get_base_uri + "/inventory/template/id/" + @template.id, 'Bearer 123')
 
@@ -88,4 +117,12 @@ Then(/^I should see the template props were updated$/) do
     expect(prop.required).to eql prop.required
     expect(prop.type).to eql prop.type
   end
+end
+
+And(/^I should see an error message indicating default value missing$/) do
+  expect(@result["errors"][0]).to eql Errors.props_missing_default_value(@newProp.name)
+end
+
+And(/^I should see an error message indicating invalid prop value$/) do
+  expect(@result["errors"][0]).to eql Errors.prop_invalid_value(@newProp.defaultValue, @newProp.type)
 end

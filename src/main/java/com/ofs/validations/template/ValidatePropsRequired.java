@@ -12,11 +12,13 @@ import com.ofs.validations.props.ValidatePropValue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Component
 public class ValidatePropsRequired implements TemplateUpdateValidation {
     @Autowired
     private ValidatePropValue validatePropValue;
@@ -44,7 +46,7 @@ public class ValidatePropsRequired implements TemplateUpdateValidation {
     }
 
     private boolean isDefaultValueMissing(Props props, OFSErrors errors) {
-        if(props.getDefaultValue().isEmpty()) {
+        if(props.getDefaultValue() == null || props.getDefaultValue().isEmpty()) {
             OFSError error = errors.rejectValue("template.props.default_value.required_field_missing", "Validation error. Cannot update template with required prop {name} without providing default value.");
             error.put("name", props.getName());
             return true;

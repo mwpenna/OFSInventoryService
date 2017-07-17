@@ -28,7 +28,16 @@ class Prop
         required: self.required,
         value: self.value,
         defaultValue: self.defaultValue
-    }
+    }.delete_if { |key, value| value.to_s.strip.empty? }
+  end
+
+  def update_hash
+    {
+        name: self.name,
+        type: self.type,
+        required: self.required,
+        defaultValue: self.defaultValue
+    }.delete_if { |key, value| value.to_s.strip.empty? }
   end
 
 end

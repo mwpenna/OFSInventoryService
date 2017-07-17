@@ -7,7 +7,7 @@ FactoryGirl.define do
     type "STRING"
     required false
     value "value"
-    defaultValue "value"
+    defaultValue nil
   end
 
 end
