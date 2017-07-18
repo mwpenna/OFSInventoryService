@@ -19,6 +19,11 @@ public class ValidateInventoryType implements InventoryCreateValidation{
 
     @Override
     public void validate(Inventory inventory, OFSErrors errors) throws Exception {
+
+        if(inventory.getType().equalsIgnoreCase("DEFAULT")) {
+            return;
+        }
+
         Optional<Template> templateOptional = templateRepository.getTemplateByName(inventory.getType(), inventory.getCompanyId());
 
         if(!templateOptional.isPresent()) {

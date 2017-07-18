@@ -31,6 +31,11 @@ public class ValidateInventoryProps implements InventoryCreateValidation, Invent
 
     @Override
     public void validate(Inventory inventory, OFSErrors errors) throws Exception {
+
+        if(inventory.getType().equalsIgnoreCase("DEFAULT")) {
+            validateDefaultProps(inventory, errors);
+        }
+
         Optional<Template> templateOptional = templateRepository.getTemplateByName(inventory.getType(), inventory.getCompanyId());
 
         if(templateOptional.isPresent()) {
@@ -41,6 +46,12 @@ public class ValidateInventoryProps implements InventoryCreateValidation, Invent
             if(errors.isEmpty()) {
                 validateInventoryPropValue(inventory, template, errors);
             }
+        }
+    }
+
+    private void validateDefaultProps(Inventory inventory, OFSErrors errors) {
+        if(inventory.getProps() != null || !inventory.getProps().isEmpty()) {
+            errors.rejectValue("inventory.props.not_acceptable","Validation error. Cannot create/update inventory props when inventory type is DEFAULT.");
         }
     }
 
