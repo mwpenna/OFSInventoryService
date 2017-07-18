@@ -29,6 +29,18 @@ Given(/^A (.*?) user exists and inventory item exists with all prop type for a c
   @service_client.post_to_url(@service_client.get_mock_base_uri + '/users/authenticate/status', request)
 end
 
+Given(/^A (.*?) user exists for a company and inventory item exists with type default$/) do |role|
+  @companyId = SecureRandom.uuid
+  jwtsubject = FactoryGirl.build(:jwtsubject, role: role, companyHref: "http://localhost:8080/company/id/" + @companyId)
+  request = '{"status": 200, "message":'+ jwtsubject.to_json+'}'
+  @service_client.post_to_url(@service_client.get_mock_base_uri + '/users/authenticate/status', request)
+
+  @inventory = FactoryGirl.build(:inventory, companyId: @companyId, type: 'DEFAULT')
+  @result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
+  @location = @result.headers['location']
+  @inventoryId = @location.split("/id/").last
+end
+
 When(/^A request to update inventory is received$/) do
   @inventory.price = (rand 100.00...400.00).round(2)
   @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, @inventory.update_to_json, "Bearer "+ "123")
@@ -129,6 +141,17 @@ end
 
 When(/^A request to update inventory item with valid prop STRING value is received$/) do
   @inventory.props.detect{|u| u.type == 'STRING'}.value = "UPDATEDSTRINGVALUE"
+  @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, @inventory.update_to_json, "Bearer "+ "123")
+end
+
+When(/^A request to update inventory item of type DEFAULT is received$/) do
+  @inventory.price = 10000.round(2)
+  @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, @inventory.update_to_json, "Bearer "+ "123")
+end
+
+When(/^A request to update inventory item of type DEFAULT is received with PROPS$/) do
+  prop = FactoryGirl.build(:prop, name: Faker::Name.name, value: "1234")
+  @inventory.props = [prop]
   @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, @inventory.update_to_json, "Bearer "+ "123")
 end
 

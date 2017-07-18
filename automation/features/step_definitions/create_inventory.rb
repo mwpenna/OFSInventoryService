@@ -180,6 +180,18 @@ When(/^A request to create inventory item with valid prop STRING value is receiv
   sleep(0.1)
 end
 
+When(/^A request to create inventory item with type DEFAULT is received$/) do
+  @inventory = FactoryGirl.build(:inventory, companyId: @companyId, type: 'DEFAULT')
+  @result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
+  @location = @result.headers['location']
+end
+
+When(/^A request to create inventory item with type DEFAULT is received with PROPS$/) do
+  prop = FactoryGirl.build(:prop, name: 'MyPropField', value: "SOMEVALUE")
+  @inventory = FactoryGirl.build(:inventory, companyId: @companyId, props: [prop], type: 'DEFAULT')
+  @result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
+end
+
 And(/^I should see an inventory error message with (.*?) not allowed/) do |property|
   expect(@result["errors"][0]).to eql Errors.inventory_field_not_acceptable(property)
 end
@@ -206,6 +218,10 @@ end
 
 And(/^I should see an inventory error message indicating invalid prop value$/) do
   expect(@result["errors"][0]).to eql Errors.prop_invalid_value(@invalidProp.value, @invalidProp.type)
+end
+
+And(/^I should see an error message indicating props not allowed$/) do
+  expect(@result["errors"][0]).to eql Errors.inventory_default_props
 end
 
 And(/^I should see the inventory item was created$/) do

@@ -166,6 +166,18 @@ Feature: Inventory is created when inventory endpoint is called
     Then the response should have a status of 201
     And I should see the inventory item was created
 
+  Scenario: A request to create inventory item with DEFAULT type
+    Given A ADMIN user exists for a company
+    When A request to create inventory item with type DEFAULT is received
+    Then the response should have a status of 201
+    And I should see the inventory item was created
+
+  Scenario: A request to update inventory item of type DEFAULT is received with PROPS
+    Given A ADMIN user exists for a company
+    When A request to create inventory item with type DEFAULT is received with PROPS
+    Then the response should have a status of 400
+    And I should see an error message indicating props not allowed
+
 
 
 

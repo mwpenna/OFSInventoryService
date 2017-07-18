@@ -194,3 +194,15 @@ Feature: Inventory is update when inventory endpoint is called
     When A request to update inventory item with valid prop STRING value is received
     Then the response should have a status of 204
     And I should see the updated inventory item was returned
+
+  Scenario: A request to update inventory item of type DEFAULT
+    Given A ADMIN user exists for a company and inventory item exists with type default
+    When A request to update inventory item of type DEFAULT is received
+    Then the response should have a status of 204
+    And I should see the updated inventory item was returned
+
+  Scenario: A request to update inventory item of type DEFAULT is received with PROPS
+    Given A ADMIN user exists for a company and inventory item exists with type default
+    When A request to update inventory item of type DEFAULT is received with PROPS
+    Then the response should have a status of 400
+    And I should see an error message indicating props not allowed

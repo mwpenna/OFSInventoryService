@@ -100,4 +100,10 @@ class Errors
      "message"=>"Validation error. Invalid property provided.",
      "developerMessage"=>"Validation error. Invalid property provided."}
   end
+
+  def self.inventory_default_props
+    {"code"=>"inventory.props.not_acceptable",
+     "message"=>"Validation error. Cannot create/update inventory props when inventory type is DEFAULT.",
+     "developerMessage"=>"Validation error. Cannot create/update inventory props when inventory type is DEFAULT."}
+  end
 end

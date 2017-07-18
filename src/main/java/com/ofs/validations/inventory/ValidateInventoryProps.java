@@ -50,7 +50,7 @@ public class ValidateInventoryProps implements InventoryCreateValidation, Invent
     }
 
     private void validateDefaultProps(Inventory inventory, OFSErrors errors) {
-        if(inventory.getProps() != null || !inventory.getProps().isEmpty()) {
+        if(inventory.getProps() != null && !inventory.getProps().isEmpty()) {
             errors.rejectValue("inventory.props.not_acceptable","Validation error. Cannot create/update inventory props when inventory type is DEFAULT.");
         }
     }
