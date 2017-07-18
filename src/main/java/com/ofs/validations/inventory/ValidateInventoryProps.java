@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -31,35 +33,50 @@ public class ValidateInventoryProps implements InventoryCreateValidation, Invent
     public void validate(Inventory inventory, OFSErrors errors) throws Exception {
         Optional<Template> templateOptional = templateRepository.getTemplateByName(inventory.getType(), inventory.getCompanyId());
 
-        inventory.getProps().forEach(props -> {
-            validatePropValue(props, errors);
-        });
-
         if(templateOptional.isPresent()) {
             Template template = templateOptional.get();
+            validateAllRequiredPropsPresent(inventory, template, errors);
+            validateInventoryPropInTemplate(inventory, template, errors);
 
-            template.getProps().forEach(prop -> {
-                Optional<Props> propsOptional = inventory.getProps().stream().filter(inventoryProp ->  inventoryProp.getName().equalsIgnoreCase(prop.getName())).findFirst();
-
-                if(propsOptional.isPresent()) {
-                    defaultSystemProps(propsOptional.get(), prop);
-                }
-                else {
-                    if(prop.isRequired()) {
-                        errors.rejectValue("inventory.required.prop.missing", "Validation error. Missing required template property.");
-
-                    }
-                }
-            });
-
-            inventory.getProps().forEach(prop -> {
-                Optional<Props> propsOptional = template.getProps().stream().filter(templateProp -> templateProp.getName().equalsIgnoreCase(prop.getName())).findFirst();
-
-                if(!propsOptional.isPresent()) {
-                    errors.rejectValue("inventory.invalid.prop", "Validation error. Invalid property provided.");
-                }
-            });
+            if(errors.isEmpty()) {
+                validateInventoryPropValue(inventory, template, errors);
+            }
         }
+    }
+
+    private void validateInventoryPropValue(Inventory inventory, Template template, OFSErrors errors) {
+        Map<String, Props> propMap = template.getProps().stream().collect(Collectors.toMap(Props::getName, Props::getProp));
+
+        inventory.getProps().forEach(props -> {
+            props.setType(propMap.get(props.getName()).getType());
+            validatePropValue(props, errors);
+        });
+    }
+
+    private void validateAllRequiredPropsPresent(Inventory inventory, Template template, OFSErrors errors) {
+        template.getProps().forEach(prop -> {
+            Optional<Props> propsOptional = inventory.getProps().stream().filter(inventoryProp ->  inventoryProp.getName().equalsIgnoreCase(prop.getName())).findFirst();
+
+            if(propsOptional.isPresent()) {
+                defaultSystemProps(propsOptional.get(), prop);
+            }
+            else {
+                if(prop.isRequired()) {
+                    errors.rejectValue("inventory.required.prop.missing", "Validation error. Missing required template property.");
+
+                }
+            }
+        });
+    }
+
+    private void validateInventoryPropInTemplate(Inventory inventory, Template template, OFSErrors errors) {
+        inventory.getProps().forEach(prop -> {
+            Optional<Props> propsOptional = template.getProps().stream().filter(templateProp -> templateProp.getName().equalsIgnoreCase(prop.getName())).findFirst();
+
+            if(!propsOptional.isPresent()) {
+                errors.rejectValue("inventory.invalid.prop", "Validation error. Invalid property provided.");
+            }
+        });
     }
 
     @Override
@@ -76,7 +93,7 @@ public class ValidateInventoryProps implements InventoryCreateValidation, Invent
         try {
             validatePropValue.validate(props, errors);
         } catch (Exception e) {
-            log.error("Unhandled exception occurred");
+            log.error("Unhandled exception occurred", e);
             throw new ServerException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

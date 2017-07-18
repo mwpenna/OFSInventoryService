@@ -136,6 +136,36 @@ Feature: Inventory is created when inventory endpoint is called
     Then the response should have a status of 400
     And I should see an inventory error message indicating name exists
 
+  Scenario: A request to create inventory item with invalid NUMBER prop value
+    Given A ADMIN user exists and template exists with all prop type for a company
+    When A request to create inventory item with invalid prop NUMBER value is received
+    Then the response should have a status of 400
+    And I should see an inventory error message indicating invalid prop value
+
+  Scenario: A request to create inventory item with valid NUMBER prop value
+    Given A ADMIN user exists and template exists with all prop type for a company
+    When A request to create inventory item with valid prop NUMBER value is received
+    Then the response should have a status of 201
+    And I should see the inventory item was created
+
+  Scenario: A request to create inventory item with invalid prop value
+    Given A ADMIN user exists and template exists with all prop type for a company
+    When A request to create inventory item with invalid prop BOOLEAN value is received
+    Then the response should have a status of 400
+    And I should see an inventory error message indicating invalid prop value
+
+  Scenario: A request to create inventory item with valid BOOLEAN prop value
+    Given A ADMIN user exists and template exists with all prop type for a company
+    When A request to create inventory item with valid prop BOOLEAN value is received
+    Then the response should have a status of 201
+    And I should see the inventory item was created
+
+  Scenario: A request to create inventory item with valid STRING prop value
+    Given A ADMIN user exists and template exists with all prop type for a company
+    When A request to create inventory item with valid prop STRING value is received
+    Then the response should have a status of 201
+    And I should see the inventory item was created
+
 
 
 

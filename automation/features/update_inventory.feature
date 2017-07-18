@@ -164,3 +164,33 @@ Feature: Inventory is update when inventory endpoint is called
     When A request to update an inventorys props field defaultValue is received
     Then the response should have a status of 400
     And I should see an inventory error message indicating prop defaultValue invalid
+
+  Scenario: A request to update inventory item with invalid NUMBER prop value
+    Given A ADMIN user exists and inventory item exists with all prop type for a company
+    When A request to update inventory item with invalid prop NUMBER value is received
+    Then the response should have a status of 400
+    And I should see an inventory error message indicating invalid prop value
+
+  Scenario: A request to update inventory item with valid NUMBER prop value
+    Given A ADMIN user exists and inventory item exists with all prop type for a company
+    When A request to update inventory item with valid prop NUMBER value is received
+    Then the response should have a status of 204
+    And I should see the updated inventory item was returned
+
+  Scenario: A request to update inventory item with invalid prop value
+    Given A ADMIN user exists and inventory item exists with all prop type for a company
+    When A request to update inventory item with invalid prop BOOLEAN value is received
+    Then the response should have a status of 400
+    And I should see an inventory error message indicating invalid prop value
+
+  Scenario: A request to update inventory item with valid BOOLEAN prop value
+    Given A ADMIN user exists and inventory item exists with all prop type for a company
+    When A request to update inventory item with valid prop BOOLEAN value is received
+    Then the response should have a status of 204
+    And I should see the updated inventory item was returned
+
+  Scenario: A request to update inventory item with valid STRING prop value
+    Given A ADMIN user exists and inventory item exists with all prop type for a company
+    When A request to update inventory item with valid prop STRING value is received
+    Then the response should have a status of 204
+    And I should see the updated inventory item was returned

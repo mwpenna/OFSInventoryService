@@ -1,3 +1,34 @@
+Given(/^A (.*?) user exists and inventory item exists with all prop type for a company$/) do |role|
+  @companyId = SecureRandom.uuid
+  jwtsubject = FactoryGirl.build(:jwtsubject, role: 'ADMIN', companyHref: 'http://localhost:8080/company/id/'+ @companyId)
+  request = '{"status": 200, "message":'+ jwtsubject.to_json+'}'
+  @service_client.post_to_url(@service_client.get_mock_base_uri + '/users/authenticate/status', request)
+
+  prop1 = FactoryGirl.build(:prop, name: 'color', required: false, type:'STRING')
+  prop2 = FactoryGirl.build(:prop, name: 'size', required: false, type:'NUMBER')
+  prop3 = FactoryGirl.build(:prop, name: 'isInStock', required: false, type:'BOOLEAN')
+  @template = FactoryGirl.build(:template, name: Faker::Name.name , props: [prop1, prop2, prop3])
+  result = @service_client.post_to_url_with_auth("/inventory/template", @template.create_to_json, "Bearer "+ "123")
+  location = result.headers['location']
+  @template.companyId = @companyId
+  @template.id = location.split("/id/").last
+
+  inventoryprop1 = FactoryGirl.build(:prop, name: 'color', required: false, type:'STRING', value: "STRINGVALUE")
+  inventoryprop2 = FactoryGirl.build(:prop, name: 'size', required: false, type:'NUMBER', value: "123")
+  inventoryprop3 = FactoryGirl.build(:prop, name: 'isInStock', required: false, type:'BOOLEAN', value: "true")
+  props = [inventoryprop1,inventoryprop2,inventoryprop3]
+
+  @inventory = FactoryGirl.build(:inventory, companyId: @companyId, props: props, type: @template.name)
+  sleep(0.1)
+  result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
+  @location = result.headers['location']
+  @inventoryId = @location.split("/id/").last
+
+  jwtsubject = FactoryGirl.build(:jwtsubject, role: role, companyHref: 'http://localhost:8080/company/id/'+ @companyId)
+  request = '{"status": 200, "message":'+ jwtsubject.to_json+'}'
+  @service_client.post_to_url(@service_client.get_mock_base_uri + '/users/authenticate/status', request)
+end
+
 When(/^A request to update inventory is received$/) do
   @inventory.price = (rand 100.00...400.00).round(2)
   @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, @inventory.update_to_json, "Bearer "+ "123")
@@ -77,6 +108,27 @@ end
 When(/^A request to update inventory with prop that is not in the template is received$/) do
   prop = FactoryGirl.build(:prop, name: Faker::Name.name, value: "1234")
   @inventory.props <<  prop
+  @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, @inventory.update_to_json, "Bearer "+ "123")
+end
+
+When(/^A request to update inventory item with invalid prop (.*?) value is received$/) do |type|
+  @inventory.props.detect{|u| u.type == type}.value = "INVALIDVALUE"
+  @invalidProp = @inventory.props.detect{|u| u.type == type}
+  @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, @inventory.update_to_json, "Bearer "+ "123")
+end
+
+When(/^A request to update inventory item with valid prop NUMBER value is received$/) do
+  @inventory.props.detect{|u| u.type == 'NUMBER'}.value = "555555"
+  @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, @inventory.update_to_json, "Bearer "+ "123")
+end
+
+When(/^A request to update inventory item with valid prop BOOLEAN value is received$/) do
+  @inventory.props.detect{|u| u.type == 'BOOLEAN'}.value = "false"
+  @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, @inventory.update_to_json, "Bearer "+ "123")
+end
+
+When(/^A request to update inventory item with valid prop STRING value is received$/) do
+  @inventory.props.detect{|u| u.type == 'STRING'}.value = "UPDATEDSTRINGVALUE"
   @result = @service_client.post_to_url_with_auth("/inventory/id/"+@inventoryId, @inventory.update_to_json, "Bearer "+ "123")
 end
 

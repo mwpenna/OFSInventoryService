@@ -1,3 +1,21 @@
+Given(/^A (.*?) user exists and template exists with all prop type for a company$/) do |role|
+  @companyId = SecureRandom.uuid
+  jwtsubject = FactoryGirl.build(:jwtsubject, role: 'ADMIN', companyHref: 'http://localhost:8080/company/id/'+ @companyId)
+  request = '{"status": 200, "message":'+ jwtsubject.to_json+'}'
+  @service_client.post_to_url(@service_client.get_mock_base_uri + '/users/authenticate/status', request)
+  prop1 = FactoryGirl.build(:prop, name: 'color', required: false, type:'STRING')
+  prop2 = FactoryGirl.build(:prop, name: 'size', required: false, type:'NUMBER')
+  prop3 = FactoryGirl.build(:prop, name: 'isInStock', required: false, type:'BOOLEAN')
+  @template = FactoryGirl.build(:template, name: Faker::Name.name , props: [prop1, prop2, prop3])
+  result = @service_client.post_to_url_with_auth("/inventory/template", @template.create_to_json, "Bearer "+ "123")
+  @location = result.headers['location']
+  @template.companyId = @companyId
+  @template.id = @location.split("/id/").last
+  jwtsubject = FactoryGirl.build(:jwtsubject, role: role, companyHref: 'http://localhost:8080/company/id/'+ @companyId)
+  request = '{"status": 200, "message":'+ jwtsubject.to_json+'}'
+  @service_client.post_to_url(@service_client.get_mock_base_uri + '/users/authenticate/status', request)
+end
+
 When(/^A request to create an inventory item is received$/) do
   props = []
   @template.props.each do |property|
@@ -119,6 +137,49 @@ When(/^A request to create inventory item with duplicate name is received$/) do
   @location = @result.headers['location']
 end
 
+When(/^A request to create inventory item with invalid prop (.*?) value is received$/) do |type|
+  props = []
+  prop = @template.props.detect{|u| u.type == type}
+  @invalidProp = FactoryGirl.build(:prop, name: prop.name, required: prop.required, type: type, value: "INVALIDVALUE")
+  props << @invalidProp
+  @inventory = FactoryGirl.build(:inventory, companyId: @companyId, props: props, type: @template.name)
+  @result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
+  sleep(0.1)
+end
+
+When(/^A request to create inventory item with valid prop NUMBER value is received$/) do
+  props = []
+  prop = @template.props.detect{|u| u.type == 'NUMBER'}
+  @validProp = FactoryGirl.build(:prop, name: prop.name, required: prop.required, type: prop.type, value: "123")
+  props << @validProp
+  @inventory = FactoryGirl.build(:inventory, companyId: @companyId, props: props, type: @template.name)
+  @result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
+  @location = @result.headers['location']
+  sleep(0.1)
+end
+
+When(/^A request to create inventory item with valid prop BOOLEAN value is received$/) do
+  props = []
+  prop = @template.props.detect{|u| u.type == 'BOOLEAN'}
+  @validProp = FactoryGirl.build(:prop, name: prop.name, required: prop.required, type: prop.type, value: "true")
+  props << @validProp
+  @inventory = FactoryGirl.build(:inventory, companyId: @companyId, props: props, type: @template.name)
+  @result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
+  @location = @result.headers['location']
+  sleep(0.1)
+end
+
+When(/^A request to create inventory item with valid prop STRING value is received$/) do
+  props = []
+  prop = @template.props.detect{|u| u.type == 'STRING'}
+  @validProp = FactoryGirl.build(:prop, name: prop.name, required: prop.required, type: prop.type, value: "SOMEVALUE")
+  props << @validProp
+  @inventory = FactoryGirl.build(:inventory, companyId: @companyId, props: props, type: @template.name)
+  @result = @service_client.post_to_url_with_auth("/inventory", @inventory.create_to_json, "Bearer "+ "123")
+  @location = @result.headers['location']
+  sleep(0.1)
+end
+
 And(/^I should see an inventory error message with (.*?) not allowed/) do |property|
   expect(@result["errors"][0]).to eql Errors.inventory_field_not_acceptable(property)
 end
@@ -141,6 +202,10 @@ end
 
 And(/^I should see an inventory error message indicating invalid inventory type$/) do
   expect(@result["errors"][0]).to eql Errors.inventory_type_not_valid
+end
+
+And(/^I should see an inventory error message indicating invalid prop value$/) do
+  expect(@result["errors"][0]).to eql Errors.prop_invalid_value(@invalidProp.value, @invalidProp.type)
 end
 
 And(/^I should see the inventory item was created$/) do
