@@ -159,7 +159,7 @@ public class TemplateController {
     }
 
     @ResponseBody
-    @PostMapping(value="")
+    @PostMapping(value="/search")
     @Authenticate
     @CrossOrigin(origins = "*")
     @ValidationSchema(value = "/template.search.json")
