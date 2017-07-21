@@ -18,6 +18,7 @@ import com.ofs.validators.template.TemplateCompanyIdValidator;
 import com.ofs.validators.template.TemplateCreateValidator;
 import com.ofs.validators.template.TemplateDeleteValidator;
 import com.ofs.validators.template.TemplateGetValidator;
+import com.ofs.validators.template.TemplateSearchValidator;
 import com.ofs.validators.template.TemplateUpdateValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,9 @@ public class TemplateController {
 
     @Autowired
     private TemplateUpdateValidator templateUpdateValidator;
+
+    @Autowired
+    private TemplateSearchValidator templateSearchValidator;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ValidationSchema(value = "/template-create.json")
@@ -151,6 +155,27 @@ public class TemplateController {
         else {
             log.error("Template with id: {} not found", templateId);
             throw new NotFoundException();
+        }
+    }
+
+    @ResponseBody
+    @PostMapping(value="")
+    @Authenticate
+    @CrossOrigin(origins = "*")
+    @ValidationSchema(value = "/template.search.json")
+    public List<Template> search(OFSServerForm<Template> form) throws Exception {
+        Subject subject = SecurityContext.getSubject();
+        log.debug("Fetching template for company id {}", StringUtils.getIdFromURI(subject.getCompanyHref()));
+
+        OFSErrors ofsErrors = new OFSErrors();
+        templateSearchValidator.validate(null, ofsErrors);
+
+        Optional<List<Template>> optionalTemplate = templateRepository.getTemplateByCompanyId(StringUtils.getIdFromURI(subject.getCompanyHref()));
+        if(optionalTemplate.isPresent()) {
+            return form.search(optionalTemplate.get());
+        }
+        else{
+            return new ArrayList<>();
         }
     }
 
