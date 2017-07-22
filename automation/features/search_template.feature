@@ -1,4 +1,4 @@
-@Service
+@service
 Feature: Template list is returned when search by enpoint is called
 
   Scenario: a request to search for template is received by user with ACCOUNT_MANAGER role
@@ -67,10 +67,10 @@ Feature: Template list is returned when search by enpoint is called
 
   Scenario: A request to search for templates is received by a ADMIN
     Given User authenticate service returns an exception
-    When A request to search for a template is received
+    When A request to search for templates is received
     Then the response should have a status of 403
 
   Scenario: A request to get search for templates is received by a ADMIN
     Given A ADMIN user does not exists for a company
-    When A request to search for a template is received
+    When A request to search for templates is received
     Then the response should have a status of 403

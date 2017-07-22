@@ -40,4 +40,10 @@ class Prop
     }.delete_if { |key, value| value.to_s.strip.empty? }
   end
 
+  def search_hash
+    {
+        name: self.name
+    }.delete_if { |key, value| value.to_s.strip.empty? }
+  end
+
 end

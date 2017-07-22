@@ -162,7 +162,7 @@ public class TemplateController {
     @PostMapping(value="/search")
     @Authenticate
     @CrossOrigin(origins = "*")
-    @ValidationSchema(value = "/template.search.json")
+    @ValidationSchema(value = "/template-search.json")
     public List<Template> search(OFSServerForm<Template> form) throws Exception {
         Subject subject = SecurityContext.getSubject();
         log.debug("Fetching template for company id {}", StringUtils.getIdFromURI(subject.getCompanyHref()));

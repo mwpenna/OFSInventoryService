@@ -96,4 +96,32 @@ class Template
     }.to_json
   end
 
+  def search_by_name_to_json
+    {
+        name: self.name
+    }.to_json
+  end
+
+  def search_by_name_to_hash
+    {
+        name: self.name
+    }
+  end
+
+  def search_props_to_json
+    {
+        props: props.map do |prop|
+          prop.search_hash
+        end
+    }.to_json
+  end
+
+  def search_props_to_hash
+    {
+        props: props.map do |prop|
+          prop.search_hash
+        end
+    }
+  end
+
 end

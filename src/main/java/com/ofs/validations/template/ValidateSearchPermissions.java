@@ -15,7 +15,7 @@ public class ValidateSearchPermissions implements TemplateSearchValidation {
     public void validate(Template template, OFSErrors errors) throws Exception {
         Subject subject = SecurityContext.getSubject();
 
-        if(!subject.getRole().equalsIgnoreCase("SYSTEM_ADMIN") && !subject.getRole().equalsIgnoreCase("ADMIN")) {
+        if(!subject.getRole().equalsIgnoreCase("SYSTEM_ADMIN") && !subject.getRole().equalsIgnoreCase("ADMIN") && !subject.getRole().equalsIgnoreCase("ACCOUNT_MANAGER")) {
             throw new UnauthorizedException("OAuth", "OFSServer");
         }
     }
