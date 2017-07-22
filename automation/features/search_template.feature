@@ -60,8 +60,14 @@ Feature: Template list is returned when search by enpoint is called
     And I should see the template list was returned
 
   Scenario: A request to search for templates is received by ADMIN user with a prop search parameter of name
-    Given A ADMIN user exists and templates exists for a company
+    Given A ADMIN user exists and templates exists with different prop names for a company
     When A request to search for a template is received with prop search parameter name
+    Then the response should have a status of 200
+    And I should see the template list was returned
+
+  Scenario: A request to search for templates is received by ADMIN user with a prop search parameter of name
+    Given A ADMIN user exists and templates exists with different prop names for a company
+    When A request to search for a template is received with both prop search parameter and name parameter
     Then the response should have a status of 200
     And I should see the template list was returned
 
