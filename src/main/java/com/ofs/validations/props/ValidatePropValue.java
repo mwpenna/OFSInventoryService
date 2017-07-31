@@ -44,7 +44,9 @@ public class ValidatePropValue implements Validator<Props> {
 
     private void generateInvalidError(Props prop, OFSErrors errors) {
         OFSError error = errors.rejectValue("prop.invalid_value", "Validation exception. Invalid prop value: {value} for type: {type}.");
-        error.put("value", prop.getValue() != null ? prop.getValue() : prop.getDefaultValue()).put("type", prop.getType().toString());
+        error.put("value", prop.getValue() != null ? prop.getValue() : prop.getDefaultValue())
+                .put("type", prop.getType().toString())
+                .put("name", prop.getName());
     }
 
     private boolean validateNumber(String value) {

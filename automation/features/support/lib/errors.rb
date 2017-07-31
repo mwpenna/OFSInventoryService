@@ -30,11 +30,11 @@ class Errors
      "properties"=>{"name"=>"#{name}"}}
   end
 
-  def self.prop_invalid_value(value, type)
+  def self.prop_invalid_value(value, type, name)
     {"code"=>"prop.invalid_value",
      "message"=>"Validation exception. Invalid prop value: #{value} for type: #{type}.",
      "developerMessage"=>"Validation exception. Invalid prop value: {value} for type: {type}.",
-     "properties"=>{"value"=>"#{value}", "type"=>"#{type}"}}
+     "properties"=>{"value"=>"#{value}", "type"=>"#{type}", "name"=>"#{name}"}}
   end
 
   def self.inventory_required_field_missing(field)

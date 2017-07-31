@@ -112,7 +112,7 @@ When(/^A request is made to update a templates props$/) do
   @newProp = FactoryGirl.build(:prop, name: Faker::Name.name, required: true, type: 'STRING', defaultValue: "VALIDDEFAULTVALUE")
   @template.props << @newProp
   @result = @service_client.post_to_url_with_auth("/inventory/template/id/"+@template.id, @template.update_props_to_json, "Bearer "+ "123")
-  sleep(0.1)
+  sleep(0.2)
 end
 
 Then(/^I should see the template was updated$/) do
@@ -154,7 +154,7 @@ And(/^I should see an error message indicating default value missing$/) do
 end
 
 And(/^I should see an error message indicating invalid prop value$/) do
-  expect(@result["errors"][0]).to eql Errors.prop_invalid_value(@newProp.defaultValue, @newProp.type)
+  expect(@result["errors"][0]).to eql Errors.prop_invalid_value(@newProp.defaultValue, @newProp.type, @newProp.name)
 end
 
 And(/^I should see inventory for that template was updated with new props$/) do

@@ -217,7 +217,7 @@ And(/^I should see an inventory error message indicating invalid inventory type$
 end
 
 And(/^I should see an inventory error message indicating invalid prop value$/) do
-  expect(@result["errors"][0]).to eql Errors.prop_invalid_value(@invalidProp.value, @invalidProp.type)
+  expect(@result["errors"][0]).to eql Errors.prop_invalid_value(@invalidProp.value, @invalidProp.type, @invalidProp.name)
 end
 
 And(/^I should see an error message indicating props not allowed$/) do
