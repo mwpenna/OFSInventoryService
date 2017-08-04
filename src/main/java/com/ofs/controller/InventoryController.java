@@ -19,6 +19,7 @@ import com.ofs.validators.inventory.InventoryCompanyValidator;
 import com.ofs.validators.inventory.InventoryCreateValidator;
 import com.ofs.validators.inventory.InventoryDeleteValidator;
 import com.ofs.validators.inventory.InventoryGetValidator;
+import com.ofs.validators.inventory.InventorySearchValidator;
 import com.ofs.validators.inventory.InventoryUpdateValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,9 @@ public class InventoryController {
 
     @Autowired
     private InventoryUpdateValidator inventoryUpdateValidator;
+
+    @Autowired
+    private InventorySearchValidator inventorySearchValidator;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ValidationSchema(value = "/inventory-create.json")
@@ -160,6 +164,28 @@ public class InventoryController {
         else {
             log.error("Inventory with id: {} not found", inventoryId);
             throw new NotFoundException();
+        }
+    }
+
+    @ResponseBody
+    @PostMapping(value="search")
+    @Authenticate
+    @CrossOrigin(origins = "*")
+    @ValidationSchema(value = "/inventory-search.json")
+    public List<Inventory> search(OFSServerForm<Inventory> form) throws Exception {
+        OFSErrors ofsErrors = new OFSErrors();
+        inventorySearchValidator.validate(null, ofsErrors);
+        
+        Subject subject = SecurityContext.getSubject();
+        log.debug("Fetching inventory for company id {}", StringUtils.getIdFromURI(subject.getCompanyHref()));
+
+        Optional<List<Inventory>> optionalInventory = inventoryRepository.getInventoryByCompanyId(StringUtils.getIdFromURI(subject.getCompanyHref()));
+
+        if(optionalInventory.isPresent()) {
+            return form.search(optionalInventory.get());
+        }
+        else {
+            return new ArrayList<> ();
         }
     }
 
