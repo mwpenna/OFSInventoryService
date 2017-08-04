@@ -175,7 +175,7 @@ public class InventoryController {
     public List<Inventory> search(OFSServerForm<Inventory> form) throws Exception {
         OFSErrors ofsErrors = new OFSErrors();
         inventorySearchValidator.validate(null, ofsErrors);
-        
+
         Subject subject = SecurityContext.getSubject();
         log.debug("Fetching inventory for company id {}", StringUtils.getIdFromURI(subject.getCompanyHref()));
 
