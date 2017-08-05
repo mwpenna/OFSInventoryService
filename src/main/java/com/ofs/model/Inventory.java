@@ -22,10 +22,10 @@ public class Inventory implements OFSEntity {
     private String type;
     private List<Props> props;
     private String companyId;
-    private double price;
     private int quantity;
     private String name;
     private String description;
+    private double price;
 
     public Inventory() {
 
@@ -49,7 +49,6 @@ public class Inventory implements OFSEntity {
         this.setType((String) map.get("type"));
         this.setCompanyId((String) map.get("companyId"));
         this.setQuantity((int) map.get("quantity"));
-//        this.setPrice((int) map.get("price"));
         this.setPrice(Double.parseDouble(map.get("price").toString()));
         this.setName((String) map.get("name"));
         this.setDescription((String) map.get("description"));

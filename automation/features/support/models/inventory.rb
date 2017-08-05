@@ -78,4 +78,16 @@ class Inventory
     }
   end
 
+  def search_by_name_to_json
+    {
+        name: self.name
+    }.to_json
+  end
+
+  def search_by_name_to_hash
+    {
+        name: self.name
+    }
+  end
+
 end
