@@ -20,6 +20,21 @@ class Template
     self
   end
 
+  def generate_and_create_random_prop_names(args={})
+    prop1 = FactoryGirl.build(:prop, name: Faker::Name.name, required: true, type:'STRING')
+    prop2 = FactoryGirl.build(:prop, name: Faker::Name.name, required: true, type:'NUMBER')
+    @props = args[:props] || [prop1, prop2]
+    @name = Faker::Name.name
+
+    service_client = ServiceClient.new
+    result = service_client.post_to_url_with_auth("/inventory/template", create_to_json, "Bearer "+ "123")
+
+    @location = result.headers['location']
+    @companyId = args[:companyId]
+    @id = location.split("/id/").last
+    self
+  end
+
   def create_to_json
     {
         name: self.name,
