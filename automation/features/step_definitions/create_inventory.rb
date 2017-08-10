@@ -205,7 +205,7 @@ And(/^I should see an inventory error message indicating prop (.*?) missing$/) d
 end
 
 And(/^I should see an inventory error message indicating required prop missing$/) do
-  expect(@result["errors"][0]).to eql Errors.inventory_required_prop_missing
+  expect(@result["errors"][0]).to eql Errors.inventory_required_prop_missing("color")
 end
 
 And(/^I should see an inventory error message indicating prop (.*?) invalid$/) do |property|

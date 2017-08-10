@@ -6,6 +6,7 @@ import com.ofs.model.Template;
 import com.ofs.repository.TemplateRepository;
 import com.ofs.server.errors.ServerException;
 import com.ofs.server.form.update.ChangeSet;
+import com.ofs.server.model.OFSError;
 import com.ofs.server.model.OFSErrors;
 import com.ofs.validations.InventoryCreateValidation;
 import com.ofs.validations.InventoryUpdateValidation;
@@ -73,8 +74,8 @@ public class ValidateInventoryProps implements InventoryCreateValidation, Invent
             }
             else {
                 if(prop.isRequired()) {
-                    errors.rejectValue("inventory.required.prop.missing", "Validation error. Missing required template property.");
-
+                    OFSError error = errors.rejectValue("inventory.required.prop.missing", "Validation error. Missing required template property.");
+                    error.put("name", prop.getName());
                 }
             }
         });

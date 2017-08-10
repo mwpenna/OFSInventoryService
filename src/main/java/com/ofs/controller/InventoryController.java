@@ -123,6 +123,7 @@ public class InventoryController {
         }
     }
 
+    @CrossOrigin(origins = "*")
     @DeleteMapping(value = "/id/{id}")
     @Authenticate
     public ResponseEntity delete(@PathVariable("id") String id) throws Exception {

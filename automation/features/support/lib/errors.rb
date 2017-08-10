@@ -61,10 +61,11 @@ class Errors
      "properties" => {"field" => "props.items.#{field}"}}
   end
 
-  def self.inventory_required_prop_missing
+  def self.inventory_required_prop_missing(field)
     {"code"=>"inventory.required.prop.missing",
      "message"=>"Validation error. Missing required template property.",
-     "developerMessage"=>"Validation error. Missing required template property."
+     "developerMessage"=>"Validation error. Missing required template property.",
+     "properties"=>{"name"=>"#{field}"}
     }
   end
 
